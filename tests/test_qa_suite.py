@@ -13,15 +13,15 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-from app.api.deps import engine
-from app.application.use_cases.process_outbox import ProcessOutboxUseCase
-from app.infrastructure.db.models import (
+from app.api.deps import engine  # noqa: E402
+from app.application.use_cases.process_outbox import ProcessOutboxUseCase  # noqa: E402
+from app.infrastructure.db.models import (  # noqa: E402
     OutboxEventModel,
     ReservationStatus,
 )
-from app.infrastructure.db.repository import ReservationRepository
-from app.infrastructure.gateways.factory import SupplierGatewayFactory
-from app.main import app
+from app.infrastructure.db.repository import ReservationRepository  # noqa: E402
+from app.infrastructure.gateways.factory import SupplierGatewayFactory  # noqa: E402
+from app.main import app  # noqa: E402
 
 # --- Helpers ---
 
@@ -134,7 +134,10 @@ async def test_happy_path(valid_ids):
             res = await repo.get_by_code(code)
             assert res.status == ReservationStatus.CONFIRMED
             assert res.supplier_reservation_code is not None
-            print(f"4. Verified Status: {res.status}, SupplierCode: {res.supplier_reservation_code}")
+            print(
+                f"4. Verified Status: {res.status}, "
+                f"SupplierCode: {res.supplier_reservation_code}"
+            )
 
 async def test_idempotency(valid_ids):
     print("\n--- TC-002: Webhook Idempotency ---")

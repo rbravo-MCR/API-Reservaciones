@@ -28,7 +28,7 @@ async def test_reservation_end_to_end():
                 datetime.now(timezone.utc) - timedelta(days=1)
             ).isoformat(),  # Past date
             "dropoff_datetime": datetime.now(timezone.utc).isoformat(),
-            "rental_days": 0, # Invalid days
+            "rental_days": 0,  # Invalid days
             "currency_code": "USD",
             "public_price_total": "100.00",
             "supplier_cost_total": "80.00",

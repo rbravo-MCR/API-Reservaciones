@@ -86,8 +86,12 @@ def test_pay_reservation_success():
 def test_pay_reservation_idempotent_replay():
     reservation_code = _create_reservation("pay-replay")
     headers = {"Idempotency-Key": "pay-k2"}
-    first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
-    replay = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+    first = client.post(
+        f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers
+    )
+    replay = client.post(
+        f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers
+    )
     assert first.status_code == 200
     assert replay.status_code == 200
     assert first.json() == replay.json()
@@ -96,7 +100,9 @@ def test_pay_reservation_idempotent_replay():
 def test_pay_reservation_conflict_on_payload_change():
     reservation_code = _create_reservation("pay-conflict")
     headers = {"Idempotency-Key": "pay-k3"}
-    first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+    first = client.post(
+        f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers
+    )
     assert first.status_code == 200
     changed_payload = _pay_payload() | {"billing_name": "Another"}
     conflict = client.post(

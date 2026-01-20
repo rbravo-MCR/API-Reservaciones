@@ -53,7 +53,9 @@ def _create_pay_and_confirm():
             }
         ],
     }
-    res_create = client.post("/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt1"})
+    res_create = client.post(
+        "/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt1"}
+    )
     code = res_create.json()["reservation_code"]
     client.post(
         f"/reservations/{code}/pay",
@@ -125,7 +127,9 @@ def test_receipt_conflict_if_not_confirmed():
             }
         ],
     }
-    res_create = client.post("/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt2"})
+    res_create = client.post(
+        "/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt2"}
+    )
     code = res_create.json()["reservation_code"]
     res = client.get(f"/reservations/{code}/receipt")
     assert res.status_code == 409

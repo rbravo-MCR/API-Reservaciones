@@ -8,18 +8,18 @@ from unittest.mock import AsyncMock
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker  # noqa: E402
 
-from app.api.deps import engine
-from app.application.use_cases.process_outbox import ProcessOutboxUseCase
-from app.infrastructure.db.base import Base
-from app.infrastructure.db.models import (
+from app.api.deps import engine  # noqa: E402
+from app.application.use_cases.process_outbox import ProcessOutboxUseCase  # noqa: E402
+from app.infrastructure.db.base import Base  # noqa: E402
+from app.infrastructure.db.models import (  # noqa: E402
     OutboxEventModel,
     OutboxStatus,
     ReservationModel,
     ReservationStatus,
 )
-from app.infrastructure.db.repository import ReservationRepository
+from app.infrastructure.db.repository import ReservationRepository  # noqa: E402
 
 
 async def test_fallback_strategy():
@@ -60,7 +60,7 @@ async def test_fallback_strategy():
         
         use_case = ProcessOutboxUseCase(repository, mock_gateway)
         
-        count = await use_case.execute()
+        await use_case.execute()
         await session.commit()
         
         # 3. Verify Fallback
