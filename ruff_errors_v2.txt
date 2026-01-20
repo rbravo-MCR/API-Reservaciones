@@ -1,0 +1,477 @@
+E501 Line too long (105 > 100)
+  --> app\infrastructure\gateways\stripe_gateway_real.py:58:101
+   |
+56 |         else:
+57 |             try:
+58 |                 event = stripe.Event.construct_from(json.loads(payload.decode() or "{}"), stripe.api_key)
+   |                                                                                                     ^^^^^
+59 |             except Exception as exc:  # noqa: BLE001
+60 |                 raise ValueError("Invalid webhook payload") from exc
+   |
+
+E402 Module level import not at top of file
+  --> scripts\check_db.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 |
+11 | from app.api.deps import engine
+   |
+
+E402 Module level import not at top of file
+  --> scripts\check_db.py:11:1
+   |
+ 9 | from sqlalchemy import text
+10 |
+11 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+E402 Module level import not at top of file
+  --> scripts\drop_all.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 |
+11 | from app.api.deps import engine
+   |
+
+E402 Module level import not at top of file
+  --> scripts\drop_all.py:11:1
+   |
+ 9 | from sqlalchemy import text
+10 |
+11 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+E402 Module level import not at top of file
+  --> scripts\fix_db.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 |
+11 | from app.api.deps import engine
+   |
+
+E402 Module level import not at top of file
+  --> scripts\fix_db.py:11:1
+   |
+ 9 | from sqlalchemy import text
+10 |
+11 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 | from app.infrastructure.db.tables import metadata
+   |
+
+E402 Module level import not at top of file
+  --> scripts\fix_db.py:12:1
+   |
+11 | from app.api.deps import engine
+12 | from app.infrastructure.db.tables import metadata
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+E402 Module level import not at top of file
+  --> scripts\reset_db.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 |
+11 | from app.api.deps import engine
+   |
+
+E402 Module level import not at top of file
+  --> scripts\reset_db.py:11:1
+   |
+ 9 | from sqlalchemy import text
+10 |
+11 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 | from app.infrastructure.db.tables import metadata
+   |
+
+E402 Module level import not at top of file
+  --> scripts\reset_db.py:12:1
+   |
+11 | from app.api.deps import engine
+12 | from app.infrastructure.db.tables import metadata
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+E402 Module level import not at top of file
+  --> scripts\seed_db.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 |
+11 | from app.api.deps import engine
+   |
+
+E402 Module level import not at top of file
+  --> scripts\seed_db.py:11:1
+   |
+ 9 | from sqlalchemy import text
+10 |
+11 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 | from app.infrastructure.db.tables import metadata
+   |
+
+E402 Module level import not at top of file
+  --> scripts\seed_db.py:12:1
+   |
+11 | from app.api.deps import engine
+12 | from app.infrastructure.db.tables import metadata
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+E501 Line too long (115 > 100)
+  --> scripts\seed_db.py:22:101
+   |
+21 | ÔÇª     # Seed data
+22 | ÔÇª     await conn.execute(text("INSERT INTO suppliers (id, name, code, is_active) VALUES (1, 'Avis', 'AVIS', 1)"))
+   |                                                                                                   ^^^^^^^^^^^^^^^
+23 | ÔÇª     await conn.execute(text("INSERT INTO offices (id, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, ÔÇª
+24 | ÔÇª     await conn.execute(text("INSERT INTO car_categories (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+   |
+
+E501 Line too long (144 > 100)
+  --> scripts\seed_db.py:23:101
+   |
+21 | ÔÇª
+22 | ÔÇªid, name, code, is_active) VALUES (1, 'Avis', 'AVIS', 1)"))
+23 | ÔÇª, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, 'MX')"))
+   |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+24 | ÔÇªies (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+25 | ÔÇªels (id, name, code) VALUES (1, 'Web Direct', 'WEB')"))
+   |
+
+E501 Line too long (109 > 100)
+  --> scripts\seed_db.py:24:101
+   |
+22 | ÔÇª     await conn.execute(text("INSERT INTO suppliers (id, name, code, is_active) VALUES (1, 'Avis', 'AVIS', 1)"))
+23 | ÔÇª     await conn.execute(text("INSERT INTO offices (id, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, ÔÇª
+24 | ÔÇª     await conn.execute(text("INSERT INTO car_categories (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+   |                                                                                                   ^^^^^^^^^
+25 | ÔÇª     await conn.execute(text("INSERT INTO sales_channels (id, name, code) VALUES (1, 'Web Direct', 'WEB')"))
+   |
+
+E501 Line too long (111 > 100)
+  --> scripts\seed_db.py:25:101
+   |
+23 | ÔÇª     await conn.execute(text("INSERT INTO offices (id, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, ÔÇª
+24 | ÔÇª     await conn.execute(text("INSERT INTO car_categories (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+25 | ÔÇª     await conn.execute(text("INSERT INTO sales_channels (id, name, code) VALUES (1, 'Web Direct', 'WEB')"))
+   |                                                                                                   ^^^^^^^^^^^
+26 | ÔÇª     
+27 | ÔÇª     print("Seeded basic data.")
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:11:1
+   |
+ 9 | sys.path.append(str(project_root))
+10 |
+11 | from sqlalchemy.ext.asyncio import async_sessionmaker
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 |
+13 | from app.api.deps import engine
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:13:1
+   |
+11 | from sqlalchemy.ext.asyncio import async_sessionmaker
+12 |
+13 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+14 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+15 | from app.infrastructure.db.base import Base
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:14:1
+   |
+13 | from app.api.deps import engine
+14 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+15 | from app.infrastructure.db.base import Base
+16 | from app.infrastructure.db.models import (
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:15:1
+   |
+13 | from app.api.deps import engine
+14 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+15 | from app.infrastructure.db.base import Base
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+16 | from app.infrastructure.db.models import (
+17 |     OutboxEventModel,
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:16:1
+   |
+14 |   from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+15 |   from app.infrastructure.db.base import Base
+16 | / from app.infrastructure.db.models import (
+17 | |     OutboxEventModel,
+18 | |     OutboxStatus,
+19 | |     ReservationModel,
+20 | |     ReservationStatus,
+21 | | )
+   | |_^
+22 |   from app.infrastructure.db.repository import ReservationRepository
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:22:1
+   |
+20 |     ReservationStatus,
+21 | )
+22 | from app.infrastructure.db.repository import ReservationRepository
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+F841 Local variable `count` is assigned to but never used
+  --> tests\test_fallback_manual.py:63:9
+   |
+61 |         use_case = ProcessOutboxUseCase(repository, mock_gateway)
+62 |         
+63 |         count = await use_case.execute()
+   |         ^^^^^
+64 |         await session.commit()
+   |
+help: Remove assignment to unused variable `count`
+
+E501 Line too long (102 > 100)
+  --> tests\test_pay_reservation_endpoint.py:89:101
+   |
+87 |     reservation_code = _create_reservation("pay-replay")
+88 |     headers = {"Idempotency-Key": "pay-k2"}
+89 |     first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+   |                                                                                                     ^^
+90 |     replay = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+91 |     assert first.status_code == 200
+   |
+
+E501 Line too long (103 > 100)
+  --> tests\test_pay_reservation_endpoint.py:90:101
+   |
+88 |     headers = {"Idempotency-Key": "pay-k2"}
+89 |     first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+90 |     replay = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+   |                                                                                                     ^^^
+91 |     assert first.status_code == 200
+92 |     assert replay.status_code == 200
+   |
+
+E501 Line too long (102 > 100)
+   --> tests\test_pay_reservation_endpoint.py:99:101
+    |
+ 97 |     reservation_code = _create_reservation("pay-conflict")
+ 98 |     headers = {"Idempotency-Key": "pay-k3"}
+ 99 |     first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+    |                                                                                                     ^^
+100 |     assert first.status_code == 200
+101 |     changed_payload = _pay_payload() | {"billing_name": "Another"}
+    |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:16:1
+   |
+14 | sys.path.append(str(project_root))
+15 |
+16 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+17 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+18 | from app.infrastructure.db.models import (
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:17:1
+   |
+16 | from app.api.deps import engine
+17 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+18 | from app.infrastructure.db.models import (
+19 |     OutboxEventModel,
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:18:1
+   |
+16 |   from app.api.deps import engine
+17 |   from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+18 | / from app.infrastructure.db.models import (
+19 | |     OutboxEventModel,
+20 | |     ReservationStatus,
+21 | | )
+   | |_^
+22 |   from app.infrastructure.db.repository import ReservationRepository
+23 |   from app.infrastructure.gateways.factory import SupplierGatewayFactory
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:22:1
+   |
+20 |     ReservationStatus,
+21 | )
+22 | from app.infrastructure.db.repository import ReservationRepository
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+23 | from app.infrastructure.gateways.factory import SupplierGatewayFactory
+24 | from app.main import app
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:23:1
+   |
+21 | )
+22 | from app.infrastructure.db.repository import ReservationRepository
+23 | from app.infrastructure.gateways.factory import SupplierGatewayFactory
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+24 | from app.main import app
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:24:1
+   |
+22 | from app.infrastructure.db.repository import ReservationRepository
+23 | from app.infrastructure.gateways.factory import SupplierGatewayFactory
+24 | from app.main import app
+   | ^^^^^^^^^^^^^^^^^^^^^^^^
+25 |
+26 | # --- Helpers ---
+   |
+
+E501 Line too long (101 > 100)
+   --> tests\test_qa_suite.py:137:101
+    |
+135 |             assert res.status == ReservationStatus.CONFIRMED
+136 |             assert res.supplier_reservation_code is not None
+137 |             print(f"4. Verified Status: {res.status}, SupplierCode: {res.supplier_reservation_code}")
+    |                                                                                                     ^
+138 |
+139 | async def test_idempotency(valid_ids):
+    |
+
+E501 Line too long (104 > 100)
+  --> tests\test_receipt_endpoint.py:56:101
+   |
+54 |         ],
+55 |     }
+56 |     res_create = client.post("/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt1"})
+   |                                                                                                     ^^^^
+57 |     code = res_create.json()["reservation_code"]
+58 |     client.post(
+   |
+
+E501 Line too long (104 > 100)
+   --> tests\test_receipt_endpoint.py:128:101
+    |
+126 |         ],
+127 |     }
+128 |     res_create = client.post("/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt2"})
+    |                                                                                                     ^^^^
+129 |     code = res_create.json()["reservation_code"]
+130 |     res = client.get(f"/reservations/{code}/receipt")
+    |
+
+E402 Module level import not at top of file
+  --> tests\test_reservation_flow.py:16:1
+   |
+16 | from app.main import app
+   | ^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+E501 Line too long (104 > 100)
+  --> tests\test_reservation_flow.py:30:101
+   |
+28 |             "dropoff_office_id": 1,
+29 |             "car_category_id": 1,
+30 |             "pickup_datetime": (datetime.now(timezone.utc) - timedelta(days=1)).isoformat(), # Past date
+   |                                                                                                     ^^^^
+31 |             "dropoff_datetime": datetime.now(timezone.utc).isoformat(),
+32 |             "rental_days": 0, # Invalid days
+   |
+
+E501 Line too long (116 > 100)
+  --> tests\test_reservation_flow.py:43:101
+   |
+41 |             "drivers": [] # Missing drivers
+42 |         }
+43 |         resp = await ac.post("/api/v1/reservations", json=invalid_payload, headers={"Idempotency-Key": "invalid-1"})
+   |                                                                                                     ^^^^^^^^^^^^^^^^
+44 |         assert resp.status_code == 422
+45 |         print("Ô£à Validaci├│n de entrada fall├│ correctamente (422 Unprocessable Entity)")
+   |
+
+E501 Line too long (117 > 100)
+  --> tests\test_reservation_flow.py:70:101
+   |
+68 |             "customer_user_agent": "Pytest",
+69 |             "contacts": [
+70 |                 {"contact_type": "BOOKER", "full_name": "Juan Perez", "email": "juan@example.com", "phone": "123456"}
+   |                                                                                                     ^^^^^^^^^^^^^^^^^
+71 |             ],
+72 |             "drivers": [
+   |
+
+E501 Line too long (111 > 100)
+  --> tests\test_reservation_flow.py:85:101
+   |
+83 |         }
+84 |         idem_key = f"e2e-{random.randint(1000, 9999)}"
+85 |         resp = await ac.post("/api/v1/reservations", json=valid_payload, headers={"Idempotency-Key": idem_key})
+   |                                                                                                     ^^^^^^^^^^^
+86 |         assert resp.status_code == 201
+87 |         data = resp.json()
+   |
+
+E501 Line too long (137 > 100)
+   --> tests\test_reservation_flow.py:101:101
+    |
+ 99 | ÔÇª
+100 | ÔÇª99)}"
+101 | ÔÇªreservation_code}/pay", json=pay_payload, headers={"Idempotency-Key": pay_idem_key})
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+102 | ÔÇª
+103 | ÔÇª
+    |
+
+E501 Line too long (103 > 100)
+  --> tests\test_schemas.py:82:101
+   |
+80 |         status="CONFIRMED",
+81 |         supplier_reservation_code="SUP-789",
+82 |         pickup={"office_id": 101, "code": "MIA1", "name": "Miami Airport", "datetime": datetime.now()},
+   |                                                                                                     ^^^
+83 |         dropoff={"office_id": 102, "code": "MIA2", "name": "Miami Downtown", "datetime": datetime.now()},
+84 |         vehicle={"car_category_id": 5, "acriss_code": "ECMN", "supplier_car_product_id": 901},
+   |
+
+E501 Line too long (105 > 100)
+  --> tests\test_schemas.py:83:101
+   |
+81 |         supplier_reservation_code="SUP-789",
+82 |         pickup={"office_id": 101, "code": "MIA1", "name": "Miami Airport", "datetime": datetime.now()},
+83 |         dropoff={"office_id": 102, "code": "MIA2", "name": "Miami Downtown", "datetime": datetime.now()},
+   |                                                                                                     ^^^^^
+84 |         vehicle={"car_category_id": 5, "acriss_code": "ECMN", "supplier_car_product_id": 901},
+85 |         contacts=[{"contact_type": "BOOKER", "full_name": "Jane Roe", "email": "jane@example.com"}],
+   |
+
+Found 45 errors.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

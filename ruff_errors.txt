@@ -1,0 +1,1351 @@
+warning: The top-level linter settings are deprecated in favour of their counterparts in the `lint` section. Please update the following options in `pyproject.toml`:
+  - 'select' -> 'lint.select'
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\dependencies.py:35:44
+   |
+35 | async def get_session(settings: Settings = Depends(get_settings)) -> AsyncSession | None:
+   |                                            ^^^^^^^^^^^^^^^^^^^^^
+36 |     if settings.use_in_memory:
+37 |         yield None
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\dependencies.py:78:26
+   |
+77 | def get_use_cases(
+78 |     settings: Settings = Depends(get_settings),
+   |                          ^^^^^^^^^^^^^^^^^^^^^
+79 |     session: AsyncSession | None = Depends(get_session),
+80 | ):
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\dependencies.py:79:36
+   |
+77 | def get_use_cases(
+78 |     settings: Settings = Depends(get_settings),
+79 |     session: AsyncSession | None = Depends(get_session),
+   |                                    ^^^^^^^^^^^^^^^^^^^^
+80 | ):
+81 |     if settings.use_in_memory:
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app\api\deps.py:1:1
+  |
+1 | / from typing import AsyncGenerator
+2 | | from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+3 | | from app.config import get_settings
+  | |___________________________________^
+4 |
+5 |   settings = get_settings()
+  |
+help: Organize imports
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\endpoints.py:26:29
+   |
+24 | async def create_reservation(
+25 |     request: CreateReservationRequest,
+26 |     session: AsyncSession = Depends(get_db_session)
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^
+27 | ):
+28 |     repository = ReservationRepository(session)
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\endpoints.py:42:29
+   |
+40 | async def get_reservation_receipt(
+41 |     code: str,
+42 |     session: AsyncSession = Depends(get_db_session)
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^
+43 | ):
+44 |     repository = ReservationRepository(session)
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\endpoints.py:58:29
+   |
+56 |     request: Request,
+57 |     stripe_signature: str = Header(None),
+58 |     session: AsyncSession = Depends(get_db_session)
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^
+59 | ):
+60 |     payload = await request.body()
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\routers\reservations.py:22:15
+   |
+20 |     payload: CreateReservationRequest,
+21 |     idem_key: str = Header(default=None, convert_underscores=False, alias="Idempotency-Key"),
+22 |     use_cases=Depends(get_use_cases),
+   |               ^^^^^^^^^^^^^^^^^^^^^^
+23 | ) -> CreateReservationResponse:
+24 |     if not idem_key:
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\routers\reservations.py:41:15
+   |
+39 |     payload: PayReservationRequest,
+40 |     idem_key: str = Header(default=None, convert_underscores=False, alias="Idempotency-Key"),
+41 |     use_cases=Depends(get_use_cases),
+   |               ^^^^^^^^^^^^^^^^^^^^^^
+42 | ) -> PayReservationResponse:
+43 |     if not idem_key:
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\routers\reservations.py:58:15
+   |
+56 | async def stripe_webhook(
+57 |     request: Request,
+58 |     use_cases=Depends(get_use_cases),
+   |               ^^^^^^^^^^^^^^^^^^^^^^
+59 | ) -> dict:
+60 |     raw_body = await request.body()
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\routers\reservations.py:73:15
+   |
+71 | async def get_receipt(
+72 |     reservation_code: str,
+73 |     use_cases=Depends(get_use_cases),
+   |               ^^^^^^^^^^^^^^^^^^^^^^
+74 | ) -> ReceiptResponse:
+75 |     return await use_cases["get_receipt"].execute(reservation_code=reservation_code)
+   |
+
+F401 [*] `typing.Any` imported but unused
+ --> app\application\interfaces\receipt_query.py:4:20
+  |
+2 | from datetime import datetime
+3 | from decimal import Decimal
+4 | from typing import Any
+  |                    ^^^
+  |
+help: Remove unused import: `typing.Any`
+
+E501 Line too long (101 > 100)
+  --> app\application\use_cases\handle_stripe_webhook.py:31:101
+   |
+29 |     async def execute(self, raw_body: bytes, signature: str | None) -> None:
+30 |         if not raw_body:
+31 |             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty webhook body")
+   |                                                                                                     ^
+32 |         try:
+33 |             event_dict = await self._stripe_gateway.parse_webhook_event(
+   |
+
+E501 Line too long (104 > 100)
+  --> app\application\use_cases\handle_stripe_webhook.py:43:101
+   |
+42 |         if not event.type or not event.data:
+43 |             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid event payload")
+   |                                                                                                     ^^^^
+44 |
+45 |         stripe_event_id = event.id
+   |
+
+E501 Line too long (103 > 100)
+   --> app\application\use_cases\handle_stripe_webhook.py:106:101
+    |
+104 |             )
+105 |         else:
+106 |             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unhandled event type")
+    |                                                                                                     ^^^
+107 |
+108 |     def _extract_intent_id(self, event: StripeWebhookEnvelope) -> str | None:
+    |
+
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+  --> app\application\use_cases\handle_webhook.py:21:13
+   |
+19 |             event = json.loads(payload)
+20 |         except json.JSONDecodeError:
+21 |             raise ValueError("Invalid JSON payload")
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+22 |
+23 |         event_type = event.get("type")
+   |
+
+E501 Line too long (101 > 100)
+  --> app\application\use_cases\handle_webhook.py:34:101
+   |
+33 |             if not reservation_code:
+34 |                 # Fallback: In a real app we might search by payment_intent_id if metadata is missing
+   |                                                                                                     ^
+35 |                 # For now, we assume it's always there or we log an error
+36 |                 print("WARNING: reservation_code missing in payment_intent metadata")
+   |
+
+F401 [*] `app.domain.constants.PAYMENT_STATUS_UNPAID` imported but unused
+  --> app\application\use_cases\pay_reservation.py:22:5
+   |
+20 | from app.domain.constants import (
+21 |     PAYMENT_STATUS_PAID,
+22 |     PAYMENT_STATUS_UNPAID,
+   |     ^^^^^^^^^^^^^^^^^^^^^
+23 |     RESERVATION_STATUS_ON_REQUEST,
+24 | )
+   |
+help: Remove unused import: `app.domain.constants.PAYMENT_STATUS_UNPAID`
+
+E501 Line too long (130 > 100)
+  --> app\application\use_cases\pay_reservation.py:28:101
+   |
+27 | def _hash_request(reservation_code: str, payload: dict[str, Any]) -> str:
+28 |     normalized = json.dumps({"reservation_code": reservation_code, **payload}, sort_keys=True, separators=(",", ":"), default=str)
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+29 |     return hashlib.sha256(normalized.encode()).hexdigest()
+   |
+
+E501 Line too long (106 > 100)
+  --> app\application\use_cases\pay_reservation.py:71:101
+   |
+69 |             reservation = await self._reservation_repo.get_by_code(reservation_code)
+70 |             if not reservation:
+71 |                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reservation not found")
+   |                                                                                                     ^^^^^^
+72 |             expected_lock_version = reservation.lock_version
+73 |             if reservation.payment_status == PAYMENT_STATUS_PAID:
+   |
+
+E501 Line too long (108 > 100)
+  --> app\application\use_cases\pay_reservation.py:79:101
+   |
+77 |                     response = self._build_response(reservation_code, latest)
+78 |                     return response
+79 |                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Reservation already paid")
+   |                                                                                                     ^^^^^^^^
+80 |
+81 |             payment_result = await self._stripe_gateway.confirm_payment(
+   |
+
+E501 Line too long (110 > 100)
+  --> app\application\use_cases\process_outbox.py:68:101
+   |
+66 |                 if event.type == "CONFIRM_SUPPLIER":
+67 |                     # We need to fetch the reservation to check/update status
+68 |                     # Note: Ideally we should use a specific method in repository to avoid N+1 if many events,
+   |                                                                                                     ^^^^^^^^^^
+69 |                     # but for this slice it's acceptable.
+70 |                     reservation_code = event.payload.get("reservation_code")
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app\application\use_cases\process_outbox_book_supplier.py:1:1
+   |
+ 1 | / from datetime import datetime, timedelta, timezone
+ 2 | | import logging
+ 3 | |
+ 4 | | from fastapi import HTTPException, status
+ 5 | |
+ 6 | | from app.application.interfaces.outbox_repo import OutboxRepo
+ 7 | | from app.application.interfaces.reservation_repo import ReservationRepo
+ 8 | | from app.application.interfaces.supplier_request_repo import SupplierRequestRepo
+ 9 | | from app.domain.constants import RESERVATION_STATUS_CONFIRMED, RESERVATION_STATUS_ON_REQUEST
+10 | | from app.infrastructure.gateways.supplier_gateway_selector import SupplierGatewaySelector
+   | |_________________________________________________________________________________________^
+11 |
+12 |   MAX_ATTEMPTS = 5
+   |
+help: Organize imports
+
+E501 Line too long (102 > 100)
+  --> app\application\use_cases\process_outbox_book_supplier.py:52:101
+   |
+50 |         reservation = await self._reservation_repo.get_by_code(reservation_code)
+51 |         if not reservation:
+52 |             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reservation not found")
+   |                                                                                                     ^^
+53 |         expected_lock_version = reservation.lock_version
+54 |         if not getattr(reservation, "country_code", None):
+   |
+
+E501 Line too long (104 > 100)
+  --> app\application\use_cases\process_outbox_book_supplier.py:55:101
+   |
+53 |         expected_lock_version = reservation.lock_version
+54 |         if not getattr(reservation, "country_code", None):
+55 |             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="country_code required")
+   |                                                                                                     ^^^^
+56 |
+57 |         gateway = self._supplier_gateway_selector.for_supplier(
+   |
+
+E501 Line too long (123 > 100)
+  --> app\application\use_cases\process_outbox_book_supplier.py:78:101
+   |
+76 |         booking_result = await gateway.book(reservation_code=reservation_code, idem_key=idem_key)
+77 |         # Try with snapshot if gateway requests it
+78 |         if booking_result.status == "FAILED" and booking_result.error_code in {"MISSING_SNAPSHOT", "MISSING_OFFICE_CODES"}:
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^
+79 |             from dataclasses import asdict
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app\config.py:1:1
+  |
+1 | / from functools import lru_cache
+2 | | from pydantic_settings import BaseSettings, SettingsConfigDict
+  | |______________________________________________________________^
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app\core\agents.py:1:1
+   |
+ 1 | / from app.core.llm import generate_content
+ 2 | | from app.core.prompts import (
+ 3 | |     get_orchestrator_prompt,
+ 4 | |     get_analysis_prompt,
+ 5 | |     get_backend_prompt,
+ 6 | |     get_data_analysis_prompt,
+ 7 | |     get_documenter_prompt,
+ 8 | |     get_qa_prompt,
+ 9 | |     get_php_to_python_prompt,
+10 | |     get_pr_manager_prompt,
+11 | |     get_orchestrator_analysis_prompt,
+12 | |     get_business_rules_prompt,
+13 | |     get_database_tables_prompt
+14 | | )
+   | |_^
+15 |
+16 |   class Agent:
+   |
+help: Organize imports
+
+F401 [*] `app.core.prompts.get_php_to_python_prompt` imported but unused
+  --> app\core\agents.py:9:5
+   |
+ 7 |     get_documenter_prompt,
+ 8 |     get_qa_prompt,
+ 9 |     get_php_to_python_prompt,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^
+10 |     get_pr_manager_prompt,
+11 |     get_orchestrator_analysis_prompt,
+   |
+help: Remove unused import: `app.core.prompts.get_php_to_python_prompt`
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app\core\llm.py:1:1
+  |
+1 | / import google.generativeai as genai
+2 | | from app.config import get_settings
+  | |___________________________________^
+3 |
+4 |   _configured = False
+  |
+help: Organize imports
+
+E501 Line too long (122 > 100)
+  --> app\core\llm.py:21:101
+   |
+21 | def generate_content(prompt: str, system_instruction: str | None = None, model_name: str = "gemini-2.0-flash-exp") -> str:
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^
+22 |     """
+23 |     Generates content using Google Gemini.
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app\core\prompts.py:1:1
+  |
+1 | / from pathlib import Path
+2 | | from functools import lru_cache
+  | |_______________________________^
+3 |
+4 |   # Define the path to the prompts directory relative to this file
+  |
+help: Organize imports
+
+F401 [*] `datetime.datetime` imported but unused
+ --> app\infrastructure\db\queries\receipt_query_sql.py:1:22
+  |
+1 | from datetime import datetime
+  |                      ^^^^^^^^
+2 | from decimal import Decimal
+  |
+help: Remove unused import: `datetime.datetime`
+
+E501 Line too long (105 > 100)
+  --> app\infrastructure\db\queries\receipt_query_sql.py:42:101
+   |
+40 |             return None
+41 |         stmt = text(
+42 |             "SELECT id, car_category_id, external_code FROM supplier_car_products WHERE id = :id LIMIT 1"
+   |                                                                                                     ^^^^^
+43 |         )
+44 |         result = await self._session.execute(stmt, {"id": product_id})
+   |
+
+E501 Line too long (107 > 100)
+  --> app\infrastructure\db\queries\receipt_query_sql.py:49:101
+   |
+48 |     async def get_receipt(self, reservation_code: str) -> ReceiptData | None:
+49 |         res_stmt = select(reservations).where(reservations.c.reservation_code == reservation_code).limit(1)
+   |                                                                                                     ^^^^^^^
+50 |         res_result = await self._session.execute(res_stmt)
+51 |         res_row = res_result.mappings().first()
+   |
+
+E501 Line too long (103 > 100)
+  --> app\infrastructure\db\repositories\outbox_repo_sql.py:62:101
+   |
+60 |                 outbox_events.c.event_type == event_type,
+61 |                 outbox_events.c.status.in_(("NEW", "RETRY")),
+62 |                 or_(outbox_events.c.next_attempt_at.is_(None), outbox_events.c.next_attempt_at <= now),
+   |                                                                                                     ^^^
+63 |                 or_(outbox_events.c.lock_expires_at.is_(None), outbox_events.c.lock_expires_at <= now),
+64 |             )
+   |
+
+E501 Line too long (103 > 100)
+  --> app\infrastructure\db\repositories\outbox_repo_sql.py:63:101
+   |
+61 |                 outbox_events.c.status.in_(("NEW", "RETRY")),
+62 |                 or_(outbox_events.c.next_attempt_at.is_(None), outbox_events.c.next_attempt_at <= now),
+63 |                 or_(outbox_events.c.lock_expires_at.is_(None), outbox_events.c.lock_expires_at <= now),
+   |                                                                                                     ^^^
+64 |             )
+65 |             .values(
+   |
+
+E501 Line too long (106 > 100)
+  --> app\infrastructure\db\repositories\payment_repo_sql.py:66:101
+   |
+64 |             update(payments)
+65 |             .where(payments.c.id == payment_id)
+66 |             .values(status="CAPTURED", stripe_event_id=stripe_event_id, stripe_charge_id=stripe_charge_id)
+   |                                                                                                     ^^^^^^
+67 |         )
+68 |         await self._session.execute(stmt)
+   |
+
+E501 Line too long (117 > 100)
+  --> app\infrastructure\db\repositories\payment_repo_sql.py:89:101
+   |
+87 |         stripe_event_id: str,
+88 |     ) -> PaymentRecord | None:
+89 |         stmt = select(payments).where(payments.c.stripe_event_id == stripe_event_id, payments.c.provider == provider)
+   |                                                                                                     ^^^^^^^^^^^^^^^^^
+90 |         result = await self._session.execute(stmt)
+91 |         row = result.mappings().first()
+   |
+
+E501 Line too long (102 > 100)
+   --> app\infrastructure\db\repositories\payment_repo_sql.py:98:101
+    |
+ 96 |         stripe_payment_intent_id: str,
+ 97 |     ) -> PaymentRecord | None:
+ 98 |         stmt = select(payments).where(payments.c.stripe_payment_intent_id == stripe_payment_intent_id)
+    |                                                                                                     ^^
+ 99 |         result = await self._session.execute(stmt)
+100 |         row = result.mappings().first()
+    |
+
+F401 [*] `app.domain.constants.RESERVATION_STATUS_PENDING` imported but unused
+  --> app\infrastructure\db\repositories\reservation_repo_sql.py:15:34
+   |
+13 |     ReservationRepo,
+14 | )
+15 | from app.domain.constants import RESERVATION_STATUS_PENDING
+   |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+16 | from app.infrastructure.db.tables import reservation_contacts, reservation_drivers, reservations
+   |
+help: Remove unused import: `app.domain.constants.RESERVATION_STATUS_PENDING`
+
+E501 Line too long (103 > 100)
+  --> app\infrastructure\db\repositories\reservation_repo_sql.py:56:101
+   |
+55 |     async def get_by_code(self, reservation_code: str) -> ReservationInput | None:
+56 |         stmt = select(reservations).where(reservations.c.reservation_code == reservation_code).limit(1)
+   |                                                                                                     ^^^
+57 |         result = await self._session.execute(stmt)
+58 |         row = result.mappings().first()
+   |
+
+E501 Line too long (108 > 100)
+  --> app\infrastructure\db\repositories\supplier_request_repo_sql.py:90:101
+   |
+89 |     async def _fetch(self, request_id: int) -> SupplierRequestRecord:
+90 |         stmt = select(reservation_supplier_requests).where(reservation_supplier_requests.c.id == request_id)
+   |                                                                                                     ^^^^^^^^
+91 |         result = await self._session.execute(stmt)
+92 |         row = result.mappings().first()
+   |
+
+E501 Line too long (106 > 100)
+  --> app\infrastructure\db\repository.py:24:101
+   |
+22 |         return result.scalar_one_or_none()
+23 |
+24 |     async def mark_as_paid_and_enqueue_confirmation(self, reservation_code: str, payment_id: str) -> None:
+   |                                                                                                     ^^^^^^
+25 |         # 1. Get Reservation
+26 |         stmt = select(ReservationModel).where(ReservationModel.reservation_code == reservation_code)
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> app\infrastructure\db\repository.py:34:9
+   |
+33 |           # 2. Idempotency Check via Payment Table (Robust)
+34 | /         from app.infrastructure.db.models import PaymentModel, OutboxEventModel, OutboxStatus
+35 | |         from sqlalchemy.exc import IntegrityError
+   | |_________________________________________________^
+36 |           
+37 |           # Try to insert payment record. If it exists (provider + tx_id), it will raise IntegrityError
+   |
+help: Organize imports
+
+E501 Line too long (101 > 100)
+  --> app\infrastructure\db\repository.py:37:101
+   |
+35 |         from sqlalchemy.exc import IntegrityError
+36 |         
+37 |         # Try to insert payment record. If it exists (provider + tx_id), it will raise IntegrityError
+   |                                                                                                     ^
+38 |         payment = PaymentModel(
+39 |             reservation_id=reservation.id,
+   |
+
+E501 Line too long (110 > 100)
+  --> app\infrastructure\db\repository.py:74:101
+   |
+73 |     async def get_pending_outbox_events(self, limit: int = 10) -> list[Any]:
+74 |         # Note: We return Any because of circular import issues if we type hint OutboxEventModel strictly here
+   |                                                                                                     ^^^^^^^^^^
+75 |         # without TYPE_CHECKING block. For simplicity in this slice, we use Any or import inside.
+76 |         from app.infrastructure.db.models import OutboxEventModel, OutboxStatus
+   |
+
+E501 Line too long (104 > 100)
+  --> app\infrastructure\db\repository.py:85:101
+   |
+83 |         return list(result.scalars().all())
+84 |
+85 |     async def update_reservation_supplier_code(self, reservation_code: str, supplier_code: str) -> None:
+   |                                                                                                     ^^^^
+86 |         reservation = await self.get_by_code(reservation_code)
+87 |         if reservation:
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> app\infrastructure\db\tables.py:1:1
+  |
+1 | / from sqlalchemy import JSON, Column, DateTime, Integer, Numeric, String, Table, Text, MetaData
+2 | | from sqlalchemy.dialects.mysql import ENUM
+  | |__________________________________________^
+3 |
+4 |   metadata = MetaData()
+  |
+help: Organize imports
+
+F401 [*] `sqlalchemy.Text` imported but unused
+ --> app\infrastructure\db\tables.py:1:81
+  |
+1 | from sqlalchemy import JSON, Column, DateTime, Integer, Numeric, String, Table, Text, MetaData
+  |                                                                                 ^^^^
+2 | from sqlalchemy.dialects.mysql import ENUM
+  |
+help: Remove unused import: `sqlalchemy.Text`
+
+F401 [*] `sqlalchemy.dialects.mysql.ENUM` imported but unused
+ --> app\infrastructure\db\tables.py:2:39
+  |
+1 | from sqlalchemy import JSON, Column, DateTime, Integer, Numeric, String, Table, Text, MetaData
+2 | from sqlalchemy.dialects.mysql import ENUM
+  |                                       ^^^^
+3 |
+4 | metadata = MetaData()
+  |
+help: Remove unused import: `sqlalchemy.dialects.mysql.ENUM`
+
+E501 Line too long (112 > 100)
+  --> app\infrastructure\gateways\america_group_gateway.py:46:101
+   |
+44 |                 supplier_reservation_code=None,
+45 |                 error_code="MISSING_SNAPSHOT",
+46 |                 error_message="AmericaGroup gateway requiere datos de reserva (pickup/dropoff codes, rate_id).",
+   |                                                                                                     ^^^^^^^^^^^^
+47 |             )
+   |
+
+F401 [*] `random` imported but unused
+ --> app\infrastructure\gateways\mock_supplier.py:2:8
+  |
+1 | import asyncio
+2 | import random
+  |        ^^^^^^
+3 | from typing import Any
+  |
+help: Remove unused import: `random`
+
+E501 Line too long (105 > 100)
+  --> app\infrastructure\gateways\stripe_gateway_real.py:58:101
+   |
+56 |         else:
+57 |             try:
+58 |                 event = stripe.Event.construct_from(json.loads(payload.decode() or "{}"), stripe.api_key)
+   |                                                                                                     ^^^^^
+59 |             except Exception as exc:  # noqa: BLE001
+60 |                 raise ValueError("Invalid webhook payload") from exc
+   |
+
+E501 Line too long (101 > 100)
+  --> app\infrastructure\gateways\supplier_gateway_http.py:50:101
+   |
+48 |             supplier_code = None
+49 |             if isinstance(body, dict):
+50 |                 supplier_code = body.get("supplier_reservation_code") or body.get("reservation_code")
+   |                                                                                                     ^
+51 |             return SupplierBookingResult(
+52 |                 status="SUCCESS",
+   |
+
+F401 [*] `typing.Callable` imported but unused
+ --> app\infrastructure\gateways\supplier_gateway_selector.py:1:20
+  |
+1 | from typing import Callable, Dict, Tuple
+  |                    ^^^^^^^^
+2 |
+3 | from app.application.interfaces.supplier_gateway import SupplierGateway
+  |
+help: Remove unused import: `typing.Callable`
+
+E501 Line too long (120 > 100)
+ --> app\infrastructure\gateways\supplier_gateway_selector.py:7:101
+  |
+6 | class SupplierGatewaySelector:
+7 |     def __init__(self, default_gateway: SupplierGateway, mapping: Dict[Tuple[int, str], SupplierGateway] | None = None):
+  |                                                                                                     ^^^^^^^^^^^^^^^^^^^^
+8 |         self._default = default_gateway
+9 |         # mapping by (supplier_id, country_code_upper)
+  |
+
+E501 Line too long (123 > 100)
+  --> app\infrastructure\in_memory\reservation_repo.py:42:101
+   |
+40 |         if reservation_code not in self.reservations:
+41 |             raise ValueError("Reservation not found")
+42 |         if expected_lock_version is not None and self.reservations[reservation_code].lock_version != expected_lock_version:
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^
+43 |             raise ValueError("lock_version mismatch")
+44 |         self.reservations[reservation_code].lock_version += 1
+   |
+
+E501 Line too long (123 > 100)
+  --> app\infrastructure\in_memory\reservation_repo.py:56:101
+   |
+54 |         if reservation_code not in self.reservations:
+55 |             raise ValueError("Reservation not found")
+56 |         if expected_lock_version is not None and self.reservations[reservation_code].lock_version != expected_lock_version:
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^
+57 |             raise ValueError("lock_version mismatch")
+58 |         self.reservations[reservation_code].lock_version += 1
+   |
+
+E501 Line too long (115 > 100)
+  --> app\infrastructure\in_memory\supplier_gateway.py:8:101
+   |
+ 7 | class StubSupplierGateway(SupplierGateway):
+ 8 |     async def book(self, reservation_code: str, idem_key: str, reservation_snapshot=None) -> SupplierBookingResult:
+   |                                                                                                     ^^^^^^^^^^^^^^^
+ 9 |         # Always succeeds for now
+10 |         return SupplierBookingResult(
+   |
+
+E402 Module level import not at top of file
+  --> scripts\check_db.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 | from sqlalchemy import text
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\check_db.py:9:1
+   |
+ 7 |   sys.path.append(str(project_root))
+ 8 |
+ 9 | / from app.api.deps import engine
+10 | | from sqlalchemy import text
+   | |___________________________^
+11 |
+12 |   async def check():
+   |
+help: Organize imports
+
+E402 Module level import not at top of file
+  --> scripts\check_db.py:10:1
+   |
+ 9 | from app.api.deps import engine
+10 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 |
+12 | async def check():
+   |
+
+E402 Module level import not at top of file
+  --> scripts\drop_all.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 | from sqlalchemy import text
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\drop_all.py:9:1
+   |
+ 7 |   sys.path.append(str(project_root))
+ 8 |
+ 9 | / from app.api.deps import engine
+10 | | from sqlalchemy import text
+   | |___________________________^
+11 |
+12 |   async def drop_everything():
+   |
+help: Organize imports
+
+E402 Module level import not at top of file
+  --> scripts\drop_all.py:10:1
+   |
+ 9 | from app.api.deps import engine
+10 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 |
+12 | async def drop_everything():
+   |
+
+E402 Module level import not at top of file
+  --> scripts\fix_db.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 | from app.infrastructure.db.tables import metadata
+11 | from sqlalchemy import text
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\fix_db.py:9:1
+   |
+ 7 |   sys.path.append(str(project_root))
+ 8 |
+ 9 | / from app.api.deps import engine
+10 | | from app.infrastructure.db.tables import metadata
+11 | | from sqlalchemy import text
+   | |___________________________^
+12 |
+13 |   async def fix():
+   |
+help: Organize imports
+
+E402 Module level import not at top of file
+  --> scripts\fix_db.py:10:1
+   |
+ 9 | from app.api.deps import engine
+10 | from app.infrastructure.db.tables import metadata
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 | from sqlalchemy import text
+   |
+
+E402 Module level import not at top of file
+  --> scripts\fix_db.py:11:1
+   |
+ 9 | from app.api.deps import engine
+10 | from app.infrastructure.db.tables import metadata
+11 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 |
+13 | async def fix():
+   |
+
+E402 Module level import not at top of file
+  --> scripts\reset_db.py:9:1
+   |
+ 7 | sys.path.append(str(project_root))
+ 8 |
+ 9 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 | from app.infrastructure.db.tables import metadata
+11 | from sqlalchemy import text
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\reset_db.py:9:1
+   |
+ 7 |   sys.path.append(str(project_root))
+ 8 |
+ 9 | / from app.api.deps import engine
+10 | | from app.infrastructure.db.tables import metadata
+11 | | from sqlalchemy import text
+   | |___________________________^
+12 |
+13 |   async def reset():
+   |
+help: Organize imports
+
+E402 Module level import not at top of file
+  --> scripts\reset_db.py:10:1
+   |
+ 9 | from app.api.deps import engine
+10 | from app.infrastructure.db.tables import metadata
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 | from sqlalchemy import text
+   |
+
+E402 Module level import not at top of file
+  --> scripts\reset_db.py:11:1
+   |
+ 9 | from app.api.deps import engine
+10 | from app.infrastructure.db.tables import metadata
+11 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 |
+13 | async def reset():
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> scripts\seed_db.py:1:1
+  |
+1 | / import asyncio
+2 | | import sys
+3 | | from pathlib import Path
+4 | | from decimal import Decimal
+  | |___________________________^
+5 |
+6 |   # Add project root to sys.path
+  |
+help: Organize imports
+
+F401 [*] `decimal.Decimal` imported but unused
+ --> scripts\seed_db.py:4:21
+  |
+2 | import sys
+3 | from pathlib import Path
+4 | from decimal import Decimal
+  |                     ^^^^^^^
+5 |
+6 | # Add project root to sys.path
+  |
+help: Remove unused import: `decimal.Decimal`
+
+E402 Module level import not at top of file
+  --> scripts\seed_db.py:10:1
+   |
+ 8 | sys.path.append(str(project_root))
+ 9 |
+10 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11 | from app.infrastructure.db.tables import metadata
+12 | from sqlalchemy import text
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\seed_db.py:10:1
+   |
+ 8 |   sys.path.append(str(project_root))
+ 9 |
+10 | / from app.api.deps import engine
+11 | | from app.infrastructure.db.tables import metadata
+12 | | from sqlalchemy import text
+   | |___________________________^
+13 |
+14 |   async def seed():
+   |
+help: Organize imports
+
+E402 Module level import not at top of file
+  --> scripts\seed_db.py:11:1
+   |
+10 | from app.api.deps import engine
+11 | from app.infrastructure.db.tables import metadata
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 | from sqlalchemy import text
+   |
+
+E402 Module level import not at top of file
+  --> scripts\seed_db.py:12:1
+   |
+10 | from app.api.deps import engine
+11 | from app.infrastructure.db.tables import metadata
+12 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+13 |
+14 | async def seed():
+   |
+
+E501 Line too long (115 > 100)
+  --> scripts\seed_db.py:21:101
+   |
+20 | ÔÇª     # Seed data
+21 | ÔÇª     await conn.execute(text("INSERT INTO suppliers (id, name, code, is_active) VALUES (1, 'Avis', 'AVIS', 1)"))
+   |                                                                                                   ^^^^^^^^^^^^^^^
+22 | ÔÇª     await conn.execute(text("INSERT INTO offices (id, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, ÔÇª
+23 | ÔÇª     await conn.execute(text("INSERT INTO car_categories (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+   |
+
+E501 Line too long (144 > 100)
+  --> scripts\seed_db.py:22:101
+   |
+20 | ÔÇª
+21 | ÔÇªid, name, code, is_active) VALUES (1, 'Avis', 'AVIS', 1)"))
+22 | ÔÇª, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, 'MX')"))
+   |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+23 | ÔÇªies (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+24 | ÔÇªels (id, name, code) VALUES (1, 'Web Direct', 'WEB')"))
+   |
+
+E501 Line too long (109 > 100)
+  --> scripts\seed_db.py:23:101
+   |
+21 | ÔÇª     await conn.execute(text("INSERT INTO suppliers (id, name, code, is_active) VALUES (1, 'Avis', 'AVIS', 1)"))
+22 | ÔÇª     await conn.execute(text("INSERT INTO offices (id, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, ÔÇª
+23 | ÔÇª     await conn.execute(text("INSERT INTO car_categories (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+   |                                                                                                   ^^^^^^^^^
+24 | ÔÇª     await conn.execute(text("INSERT INTO sales_channels (id, name, code) VALUES (1, 'Web Direct', 'WEB')"))
+   |
+
+E501 Line too long (111 > 100)
+  --> scripts\seed_db.py:24:101
+   |
+22 | ÔÇª     await conn.execute(text("INSERT INTO offices (id, name, code, supplier_id, country_code) VALUES (1, 'Cancun Airport', 'CUN', 1, ÔÇª
+23 | ÔÇª     await conn.execute(text("INSERT INTO car_categories (id, name, code) VALUES (1, 'Economy', 'ECMN')"))
+24 | ÔÇª     await conn.execute(text("INSERT INTO sales_channels (id, name, code) VALUES (1, 'Web Direct', 'WEB')"))
+   |                                                                                                   ^^^^^^^^^^^
+25 | ÔÇª     
+26 | ÔÇª     print("Seeded basic data.")
+   |
+
+F401 [*] `decimal.Decimal` imported but unused
+ --> tests\test_create_reservation_endpoint.py:1:21
+  |
+1 | from decimal import Decimal
+  |                     ^^^^^^^
+2 |
+3 | from fastapi.testclient import TestClient
+  |
+help: Remove unused import: `decimal.Decimal`
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:11:1
+   |
+ 9 | sys.path.append(str(project_root))
+10 |
+11 | from sqlalchemy.ext.asyncio import async_sessionmaker
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+12 |
+13 | from app.api.deps import engine
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:13:1
+   |
+11 | from sqlalchemy.ext.asyncio import async_sessionmaker
+12 |
+13 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+14 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+15 | from app.infrastructure.db.base import Base
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:14:1
+   |
+13 | from app.api.deps import engine
+14 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+15 | from app.infrastructure.db.base import Base
+16 | from app.infrastructure.db.models import (
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:15:1
+   |
+13 | from app.api.deps import engine
+14 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+15 | from app.infrastructure.db.base import Base
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+16 | from app.infrastructure.db.models import (
+17 |     OutboxEventModel,
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:16:1
+   |
+14 |   from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+15 |   from app.infrastructure.db.base import Base
+16 | / from app.infrastructure.db.models import (
+17 | |     OutboxEventModel,
+18 | |     OutboxStatus,
+19 | |     ReservationModel,
+20 | |     ReservationStatus,
+21 | | )
+   | |_^
+22 |   from app.infrastructure.db.repository import ReservationRepository
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_fallback_manual.py:22:1
+   |
+20 |     ReservationStatus,
+21 | )
+22 | from app.infrastructure.db.repository import ReservationRepository
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+F841 Local variable `count` is assigned to but never used
+  --> tests\test_fallback_manual.py:63:9
+   |
+61 |         use_case = ProcessOutboxUseCase(repository, mock_gateway)
+62 |         
+63 |         count = await use_case.execute()
+   |         ^^^^^
+64 |         await session.commit()
+   |
+help: Remove assignment to unused variable `count`
+
+F401 [*] `decimal.Decimal` imported but unused
+ --> tests\test_pay_reservation_endpoint.py:1:21
+  |
+1 | from decimal import Decimal
+  |                     ^^^^^^^
+2 |
+3 | from fastapi.testclient import TestClient
+  |
+help: Remove unused import: `decimal.Decimal`
+
+E501 Line too long (102 > 100)
+  --> tests\test_pay_reservation_endpoint.py:90:101
+   |
+88 |     reservation_code = _create_reservation("pay-replay")
+89 |     headers = {"Idempotency-Key": "pay-k2"}
+90 |     first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+   |                                                                                                     ^^
+91 |     replay = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+92 |     assert first.status_code == 200
+   |
+
+E501 Line too long (103 > 100)
+  --> tests\test_pay_reservation_endpoint.py:91:101
+   |
+89 |     headers = {"Idempotency-Key": "pay-k2"}
+90 |     first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+91 |     replay = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+   |                                                                                                     ^^^
+92 |     assert first.status_code == 200
+93 |     assert replay.status_code == 200
+   |
+
+E501 Line too long (102 > 100)
+   --> tests\test_pay_reservation_endpoint.py:100:101
+    |
+ 98 |     reservation_code = _create_reservation("pay-conflict")
+ 99 |     headers = {"Idempotency-Key": "pay-k3"}
+100 |     first = client.post(f"/reservations/{reservation_code}/pay", json=_pay_payload(), headers=headers)
+    |                                                                                                     ^^
+101 |     assert first.status_code == 200
+102 |     changed_payload = _pay_payload() | {"billing_name": "Another"}
+    |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:16:1
+   |
+14 | sys.path.append(str(project_root))
+15 |
+16 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+17 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+18 | from app.infrastructure.db.models import (
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:17:1
+   |
+16 | from app.api.deps import engine
+17 | from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+18 | from app.infrastructure.db.models import (
+19 |     OutboxEventModel,
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:18:1
+   |
+16 |   from app.api.deps import engine
+17 |   from app.application.use_cases.process_outbox import ProcessOutboxUseCase
+18 | / from app.infrastructure.db.models import (
+19 | |     OutboxEventModel,
+20 | |     OutboxStatus,
+21 | |     ReservationModel,
+22 | |     ReservationStatus,
+23 | | )
+   | |_^
+24 |   from app.infrastructure.db.repository import ReservationRepository
+25 |   from app.infrastructure.gateways.factory import SupplierGatewayFactory
+   |
+
+F401 [*] `app.infrastructure.db.models.OutboxStatus` imported but unused
+  --> tests\test_qa_suite.py:20:5
+   |
+18 | from app.infrastructure.db.models import (
+19 |     OutboxEventModel,
+20 |     OutboxStatus,
+   |     ^^^^^^^^^^^^
+21 |     ReservationModel,
+22 |     ReservationStatus,
+   |
+help: Remove unused import
+
+F401 [*] `app.infrastructure.db.models.ReservationModel` imported but unused
+  --> tests\test_qa_suite.py:21:5
+   |
+19 |     OutboxEventModel,
+20 |     OutboxStatus,
+21 |     ReservationModel,
+   |     ^^^^^^^^^^^^^^^^
+22 |     ReservationStatus,
+23 | )
+   |
+help: Remove unused import
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:24:1
+   |
+22 |     ReservationStatus,
+23 | )
+24 | from app.infrastructure.db.repository import ReservationRepository
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+25 | from app.infrastructure.gateways.factory import SupplierGatewayFactory
+26 | from app.main import app
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:25:1
+   |
+23 | )
+24 | from app.infrastructure.db.repository import ReservationRepository
+25 | from app.infrastructure.gateways.factory import SupplierGatewayFactory
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+26 | from app.main import app
+   |
+
+E402 Module level import not at top of file
+  --> tests\test_qa_suite.py:26:1
+   |
+24 | from app.infrastructure.db.repository import ReservationRepository
+25 | from app.infrastructure.gateways.factory import SupplierGatewayFactory
+26 | from app.main import app
+   | ^^^^^^^^^^^^^^^^^^^^^^^^
+27 |
+28 | # --- Helpers ---
+   |
+
+E501 Line too long (101 > 100)
+   --> tests\test_qa_suite.py:139:101
+    |
+137 |             assert res.status == ReservationStatus.CONFIRMED
+138 |             assert res.supplier_reservation_code is not None
+139 |             print(f"4. Verified Status: {res.status}, SupplierCode: {res.supplier_reservation_code}")
+    |                                                                                                     ^
+140 |
+141 | async def test_idempotency(valid_ids):
+    |
+
+E501 Line too long (104 > 100)
+  --> tests\test_receipt_endpoint.py:56:101
+   |
+54 |         ],
+55 |     }
+56 |     res_create = client.post("/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt1"})
+   |                                                                                                     ^^^^
+57 |     code = res_create.json()["reservation_code"]
+58 |     client.post(
+   |
+
+E501 Line too long (104 > 100)
+   --> tests\test_receipt_endpoint.py:128:101
+    |
+126 |         ],
+127 |     }
+128 |     res_create = client.post("/reservations", json=create_payload, headers={"Idempotency-Key": "rcpt2"})
+    |                                                                                                     ^^^^
+129 |     code = res_create.json()["reservation_code"]
+130 |     res = client.get(f"/reservations/{code}/receipt")
+    |
+
+E402 Module level import not at top of file
+  --> tests\test_reservation_flow.py:15:1
+   |
+13 | sys.path.append(str(project_root))
+14 |
+15 | from app.main import app
+   | ^^^^^^^^^^^^^^^^^^^^^^^^
+16 | from app.api.deps import engine
+17 | from sqlalchemy import text
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> tests\test_reservation_flow.py:15:1
+   |
+13 |   sys.path.append(str(project_root))
+14 |
+15 | / from app.main import app
+16 | | from app.api.deps import engine
+17 | | from sqlalchemy import text
+   | |___________________________^
+18 |
+19 |   async def test_reservation_end_to_end():
+   |
+help: Organize imports
+
+E402 Module level import not at top of file
+  --> tests\test_reservation_flow.py:16:1
+   |
+15 | from app.main import app
+16 | from app.api.deps import engine
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+17 | from sqlalchemy import text
+   |
+
+F401 [*] `app.api.deps.engine` imported but unused
+  --> tests\test_reservation_flow.py:16:26
+   |
+15 | from app.main import app
+16 | from app.api.deps import engine
+   |                          ^^^^^^
+17 | from sqlalchemy import text
+   |
+help: Remove unused import: `app.api.deps.engine`
+
+E402 Module level import not at top of file
+  --> tests\test_reservation_flow.py:17:1
+   |
+15 | from app.main import app
+16 | from app.api.deps import engine
+17 | from sqlalchemy import text
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+18 |
+19 | async def test_reservation_end_to_end():
+   |
+
+F401 [*] `sqlalchemy.text` imported but unused
+  --> tests\test_reservation_flow.py:17:24
+   |
+15 | from app.main import app
+16 | from app.api.deps import engine
+17 | from sqlalchemy import text
+   |                        ^^^^
+18 |
+19 | async def test_reservation_end_to_end():
+   |
+help: Remove unused import: `sqlalchemy.text`
+
+E501 Line too long (104 > 100)
+  --> tests\test_reservation_flow.py:30:101
+   |
+28 |             "dropoff_office_id": 1,
+29 |             "car_category_id": 1,
+30 |             "pickup_datetime": (datetime.now(timezone.utc) - timedelta(days=1)).isoformat(), # Past date
+   |                                                                                                     ^^^^
+31 |             "dropoff_datetime": datetime.now(timezone.utc).isoformat(),
+32 |             "rental_days": 0, # Invalid days
+   |
+
+E501 Line too long (116 > 100)
+  --> tests\test_reservation_flow.py:43:101
+   |
+41 |             "drivers": [] # Missing drivers
+42 |         }
+43 |         resp = await ac.post("/api/v1/reservations", json=invalid_payload, headers={"Idempotency-Key": "invalid-1"})
+   |                                                                                                     ^^^^^^^^^^^^^^^^
+44 |         assert resp.status_code == 422
+45 |         print("Ô£à Validaci├│n de entrada fall├│ correctamente (422 Unprocessable Entity)")
+   |
+
+E501 Line too long (117 > 100)
+  --> tests\test_reservation_flow.py:70:101
+   |
+68 |             "customer_user_agent": "Pytest",
+69 |             "contacts": [
+70 |                 {"contact_type": "BOOKER", "full_name": "Juan Perez", "email": "juan@example.com", "phone": "123456"}
+   |                                                                                                     ^^^^^^^^^^^^^^^^^
+71 |             ],
+72 |             "drivers": [
+   |
+
+E501 Line too long (111 > 100)
+  --> tests\test_reservation_flow.py:85:101
+   |
+83 |         }
+84 |         idem_key = f"e2e-{random.randint(1000, 9999)}"
+85 |         resp = await ac.post("/api/v1/reservations", json=valid_payload, headers={"Idempotency-Key": idem_key})
+   |                                                                                                     ^^^^^^^^^^^
+86 |         assert resp.status_code == 201
+87 |         data = resp.json()
+   |
+
+E501 Line too long (137 > 100)
+   --> tests\test_reservation_flow.py:101:101
+    |
+ 99 | ÔÇª
+100 | ÔÇª99)}"
+101 | ÔÇªreservation_code}/pay", json=pay_payload, headers={"Idempotency-Key": pay_idem_key})
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+102 | ÔÇª
+103 | ÔÇª
+    |
+
+E501 Line too long (103 > 100)
+  --> tests\test_schemas.py:82:101
+   |
+80 |         status="CONFIRMED",
+81 |         supplier_reservation_code="SUP-789",
+82 |         pickup={"office_id": 101, "code": "MIA1", "name": "Miami Airport", "datetime": datetime.now()},
+   |                                                                                                     ^^^
+83 |         dropoff={"office_id": 102, "code": "MIA2", "name": "Miami Downtown", "datetime": datetime.now()},
+84 |         vehicle={"car_category_id": 5, "acriss_code": "ECMN", "supplier_car_product_id": 901},
+   |
+
+E501 Line too long (105 > 100)
+  --> tests\test_schemas.py:83:101
+   |
+81 |         supplier_reservation_code="SUP-789",
+82 |         pickup={"office_id": 101, "code": "MIA1", "name": "Miami Airport", "datetime": datetime.now()},
+83 |         dropoff={"office_id": 102, "code": "MIA2", "name": "Miami Downtown", "datetime": datetime.now()},
+   |                                                                                                     ^^^^^
+84 |         vehicle={"car_category_id": 5, "acriss_code": "ECMN", "supplier_car_product_id": 901},
+85 |         contacts=[{"contact_type": "BOOKER", "full_name": "Jane Roe", "email": "jane@example.com"}],
+   |
+
+F401 [*] `decimal.Decimal` imported but unused
+ --> tests\test_webhook_stripe.py:1:21
+  |
+1 | from decimal import Decimal
+  |                     ^^^^^^^
+2 |
+3 | from fastapi.testclient import TestClient
+  |
+help: Remove unused import: `decimal.Decimal`
+
+E501 Line too long (103 > 100)
+  --> tests\test_webhook_stripe.py:59:101
+   |
+57 |         ],
+58 |     }
+59 |     create_res = client.post("/reservations", json=create_payload, headers={"Idempotency-Key": "whk1"})
+   |                                                                                                     ^^^
+60 |     reservation_code = create_res.json()["reservation_code"]
+   |
+
+Found 122 errors.
+[*] 32 fixable with the `--fix` option (1 hidden fix can be enabled with the `--unsafe-fixes` option).

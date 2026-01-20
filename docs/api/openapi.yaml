@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: Reservation Backend API
+  description: API for managing car rental reservations.
+  version: 1.0.0
+paths:
+  /api/v1/reservations:
+    post:
+      summary: Create a new reservation
+      operationId: createReservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReservationRequest"
+      responses:
+        "201":
+          description: Reservation created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateReservationResponse"
+        "400":
+          description: Invalid input
+        "500":
+          description: Internal server error
+
+  /api/v1/webhooks/stripe:
+    post:
+      summary: Handle Stripe Webhook
+      operationId: handleStripeWebhook
+      parameters:
+        - in: header
+          name: stripe-signature
+          schema:
+            type: string
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Webhook processed
+        "400":
+          description: Invalid payload or signature
+        "500":
+          description: Processing error
+
+components:
+  schemas:
+    CreateReservationRequest:
+      type: object
+      required:
+        - quote_id
+        - customer
+        - supplier_id
+        - vehicle_class
+        - total_amount
+      properties:
+        quote_id:
+          type: string
+        customer:
+          $ref: "#/components/schemas/CustomerData"
+        supplier_id:
+          type: string
+        vehicle_class:
+          type: string
+        total_amount:
+          type: number
+          format: float
+
+    CreateReservationResponse:
+      type: object
+      properties:
+        reservation_code:
+          type: string
+        status:
+          type: string
+        total_amount:
+          type: number
+        currency:
+          type: string
+
+    CustomerData:
+      type: object
+      required:
+        - email
+        - first_name
+        - last_name
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
