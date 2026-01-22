@@ -181,3 +181,20 @@ supplier_car_products = Table(
     Column("car_category_id", Integer, nullable=False),
     Column("external_code", String(50), nullable=False),
 )
+
+outbox_dead_letters = Table(
+    "outbox_dead_letters",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("original_event_id", Integer, nullable=False),
+    Column("event_type", String(64), nullable=False),
+    Column("aggregate_type", String(32), nullable=False),
+    Column("aggregate_id", Integer, nullable=False),
+    Column("reservation_code", String(50)),
+    Column("payload", JSON, nullable=False),
+    Column("error_code", String(64)),
+    Column("error_message", String(500)),
+    Column("attempts", Integer, nullable=False),
+    Column("moved_at", DateTime, nullable=False),
+    Column("created_at", DateTime, nullable=False),
+)

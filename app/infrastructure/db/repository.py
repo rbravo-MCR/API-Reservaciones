@@ -53,9 +53,8 @@ class ReservationRepository:
         except IntegrityError:
             # Duplicate payment -> Idempotent success
             # We assume if payment exists, the process was already triggered.
-            # However, we should ensure the Outbox event was also created.
-            # But for this slice, we treat it as "Already Done".
-            await self.session.rollback() # Rollback the failed insert
+            # The parent transaction will handle any necessary rollback.
+            # No manual rollback needed here to avoid inconsistent state.
             return
 
         # 3. Update Status

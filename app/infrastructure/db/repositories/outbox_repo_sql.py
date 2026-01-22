@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -5,7 +6,9 @@ from sqlalchemy import insert, or_, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.application.interfaces.outbox_repo import OutboxEvent, OutboxRepo
-from app.infrastructure.db.tables import outbox_events
+from app.infrastructure.db.tables import outbox_dead_letters, outbox_events
+
+logger = logging.getLogger(__name__)
 
 
 class OutboxRepoSQL(OutboxRepo):
@@ -149,3 +152,65 @@ class OutboxRepoSQL(OutboxRepo):
             )
         )
         await self._session.execute(stmt)
+
+    async def move_to_dlq(
+        self,
+        event: OutboxEvent,
+        error_code: str | None = None,
+        error_message: str | None = None,
+    ) -> None:
+        """
+        Move a permanently failed event to the Dead Letter Queue.
+
+        This method:
+        1. Inserts the event into outbox_dead_letters table
+        2. Marks the original event as FAILED
+        3. Logs the operation for monitoring
+
+        The DLQ preserves all event data for manual intervention and analysis.
+        """
+        now = datetime.utcnow()
+
+        # Extract reservation_code from payload if available
+        reservation_code = event.payload.get("reservation_code") if event.payload else None
+
+        # Insert into Dead Letter Queue
+        dlq_stmt = insert(outbox_dead_letters).values(
+            original_event_id=event.id,
+            event_type=event.event_type,
+            aggregate_type=event.aggregate_type,
+            aggregate_id=0,  # Not used in current implementation
+            reservation_code=reservation_code,
+            payload=event.payload,
+            error_code=error_code or event.error_code or "MAX_ATTEMPTS_EXCEEDED",
+            error_message=error_message or event.error_message or "Event failed permanently after max attempts",
+            attempts=event.attempts,
+            moved_at=now,
+            created_at=now,
+        )
+        await self._session.execute(dlq_stmt)
+
+        # Mark original event as FAILED
+        update_stmt = (
+            update(outbox_events)
+            .where(outbox_events.c.id == event.id)
+            .values(
+                status="FAILED",
+                updated_at=now,
+                locked_by=None,
+                lock_expires_at=None,
+            )
+        )
+        await self._session.execute(update_stmt)
+
+        # Log for monitoring/alerting
+        logger.warning(
+            "Event moved to Dead Letter Queue - requires manual intervention",
+            extra={
+                "event_id": event.id,
+                "event_type": event.event_type,
+                "reservation_code": reservation_code,
+                "attempts": event.attempts,
+                "error_code": error_code or event.error_code,
+            }
+        )

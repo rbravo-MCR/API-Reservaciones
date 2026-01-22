@@ -1,11 +1,11 @@
 from datetime import date, datetime
 from decimal import Decimal
 from enum import Enum
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, condecimal, constr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, StringConstraints, field_validator
 
-Money = condecimal(max_digits=12, decimal_places=2)
+Money = Annotated[Decimal, Field(max_digits=12, decimal_places=2)]
 
 
 class BookingDevice(str, Enum):
@@ -46,18 +46,17 @@ class CreateReservationRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     supplier_id: int
-    country_code: constr(strip_whitespace=True, min_length=2, max_length=3)
+    country_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=3)]
     pickup_office_id: int
     dropoff_office_id: int
     pickup_office_code: str | None = None
     dropoff_office_code: str | None = None
     car_category_id: int
     supplier_car_product_id: int | None = None
-    acriss_code: constr(strip_whitespace=True, min_length=1, max_length=10) | None = None
+    acriss_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=10)] | None = None
     pickup_datetime: datetime
     dropoff_datetime: datetime
-    rental_days: int
-    currency_code: constr(strip_whitespace=True, min_length=3, max_length=3)
+    currency_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=3)]
     public_price_total: Money
     supplier_cost_total: Money
     taxes_total: Money = Field(default=Decimal("0"))
@@ -115,7 +114,7 @@ class CreateReservationResponse(BaseModel):
     status: str
     payment_status: str
     public_price_total: Money
-    currency_code: constr(strip_whitespace=True, min_length=3, max_length=3)
+    currency_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=3)]
 
 
 class PayReservationRequest(BaseModel):
@@ -136,7 +135,7 @@ class PaymentSummary(BaseModel):
     stripe_payment_intent_id: str | None = None
     stripe_charge_id: str | None = None
     amount: Money
-    currency_code: constr(strip_whitespace=True, min_length=3, max_length=3)
+    currency_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=3)]
 
 
 class SupplierRequestSummary(BaseModel):
@@ -186,7 +185,7 @@ class PricingSnapshot(BaseModel):
     discount_total: Money
     commission_total: Money
     supplier_cost_total: Money
-    currency_code: constr(strip_whitespace=True, min_length=3, max_length=3)
+    currency_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=3)]
 
 
 class ReceiptPayment(BaseModel):

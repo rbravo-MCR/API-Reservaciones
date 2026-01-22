@@ -1,6 +1,10 @@
+import logging
+
 from app.infrastructure.db.models import OutboxStatus
 from app.infrastructure.db.repository import ReservationRepository
 from app.infrastructure.gateways.factory import SupplierGatewayFactory
+
+logger = logging.getLogger(__name__)
 
 
 class ProcessOutboxUseCase:
@@ -57,7 +61,15 @@ class ProcessOutboxUseCase:
                 processed_count += 1
                 
             except Exception as e:
-                print(f"Error processing event {event.id}: {e}")
+                logger.error(
+                    "Error processing outbox event",
+                    exc_info=e,
+                    extra={
+                        "event_id": event.id,
+                        "event_type": event.type,
+                        "retry_count": event.retry_count
+                    }
+                )
                 event.retry_count += 1
                 
                 # Fallback Strategy (ADR-003):

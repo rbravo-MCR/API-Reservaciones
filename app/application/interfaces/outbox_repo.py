@@ -62,3 +62,19 @@ class OutboxRepo:
         error_message: str | None,
     ) -> None:
         raise NotImplementedError
+
+    async def move_to_dlq(
+        self,
+        event: OutboxEvent,
+        error_code: str | None = None,
+        error_message: str | None = None,
+    ) -> None:
+        """
+        Move a permanently failed event to the Dead Letter Queue.
+
+        Args:
+            event: The outbox event that has exceeded max attempts
+            error_code: Optional error code for the final failure
+            error_message: Optional error message for the final failure
+        """
+        raise NotImplementedError

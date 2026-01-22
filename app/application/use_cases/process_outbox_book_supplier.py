@@ -124,13 +124,21 @@ class ProcessOutboxBookSupplierUseCase:
         backoff_seconds = min(BASE_BACKOFF_SECONDS * (2 ** (attempts - 1)), 300)
         next_attempt_at = now + timedelta(seconds=backoff_seconds)
         if attempts >= MAX_ATTEMPTS:
-            await self._outbox_repo.mark_failed(
-                event_id=event.id,
-                attempts=attempts,
-                aggregate_code=reservation_code,
-                event_type="BOOK_SUPPLIER",
+            # Move to Dead Letter Queue for manual intervention
+            await self._outbox_repo.move_to_dlq(
+                event=event,
                 error_code=booking_result.error_code,
                 error_message=booking_result.error_message,
+            )
+            self._logger.critical(
+                "Event moved to Dead Letter Queue - REQUIRES MANUAL INTERVENTION",
+                extra={
+                    "reservation_code": reservation_code,
+                    "outbox_event_id": event.id,
+                    "attempts": attempts,
+                    "error_code": booking_result.error_code,
+                    "error_message": booking_result.error_message,
+                }
             )
         else:
             await self._outbox_repo.mark_retry(
@@ -157,16 +165,6 @@ class ProcessOutboxBookSupplierUseCase:
             http_status=booking_result.http_status,
             response_payload=booking_result.payload,
         )
-        if attempts >= MAX_ATTEMPTS:
-            self._logger.error(
-                "Supplier booking failed permanently",
-                extra={
-                    "reservation_code": reservation_code,
-                    "outbox_event_id": event.id,
-                    "attempt": attempts,
-                    "error_code": booking_result.error_code,
-                },
-            )
         return {
             "status": RESERVATION_STATUS_ON_REQUEST,
             "next_attempt_at": next_attempt_at.isoformat() if attempts < MAX_ATTEMPTS else None,

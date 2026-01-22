@@ -1,6 +1,9 @@
 import json
+import logging
 
 from app.infrastructure.db.repository import ReservationRepository
+
+logger = logging.getLogger(__name__)
 
 
 class HandleStripeWebhookUseCase:
@@ -31,10 +34,13 @@ class HandleStripeWebhookUseCase:
             payment_id = data.get("id")
             
             if not reservation_code:
-                # Fallback: In a real app we might search by payment_intent_id 
+                # Fallback: In a real app we might search by payment_intent_id
                 # if metadata is missing
                 # For now, we assume it's always there or we log an error
-                print("WARNING: reservation_code missing in payment_intent metadata")
+                logger.warning(
+                    "reservation_code missing in payment_intent metadata",
+                    extra={"payment_intent_id": payment_id}
+                )
                 return False
 
             # 2. Atomic Update: Mark Paid + Enqueue Confirmation

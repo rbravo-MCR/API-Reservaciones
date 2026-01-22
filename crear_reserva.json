@@ -1,0 +1,53 @@
+{
+  "supplier_id": 123,
+  "country_code": "US",
+  "pickup_office_id": 10,
+  "dropoff_office_id": 15,
+  "pickup_office_code": "LAX1",
+  "dropoff_office_code": "SFO1",
+  "car_category_id": 5,
+  "supplier_car_product_id": 505,
+  "acriss_code": "ICAR",
+  "pickup_datetime": "2026-02-10T10:00:00Z",
+  "dropoff_datetime": "2026-02-15T10:00:00Z",
+  "rental_days": 5,
+  "currency_code": "USD",
+  "public_price_total": "500.00",
+  "supplier_cost_total": "400.00",
+  "taxes_total": "50.00",
+  "fees_total": "25.00",
+  "discount_total": "10.00",
+  "commission_total": "40.00",
+  "cashback_earned_amount": "5.00",
+  "booking_device": "DESKTOP",
+  "sales_channel_id": 1,
+  "traffic_source_id": 2,
+  "marketing_campaign_id": 3,
+  "affiliate_id": 4,
+  "utm_source": "google",
+  "utm_medium": "cpc",
+  "utm_campaign": "winter_sale",
+  "utm_term": "car_rental_lax",
+  "utm_content": "ad_variant_1",
+  "customer_ip": "192.168.1.100",
+  "customer_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+  "contacts": [
+    {
+      "contact_type": "BOOKER",
+      "full_name": "John Doe",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890"
+    }
+  ],
+  "drivers": [
+    {
+      "is_primary_driver": true,
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890",
+      "date_of_birth": "1990-01-15",
+      "driver_license_number": "D1234567"
+    }
+  ]
+}

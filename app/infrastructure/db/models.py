@@ -127,8 +127,46 @@ class OutboxEventModel(Base):
     def type(self): return self.event_type
     @type.setter
     def type(self, value): self.event_type = value
-    
+
     @property
     def retry_count(self): return self.attempts
     @retry_count.setter
     def retry_count(self, value): self.attempts = value
+
+
+class OutboxDeadLetterModel(Base):
+    """
+    Dead Letter Queue for permanently failed outbox events.
+
+    Events that exceed MAX_ATTEMPTS are moved here for manual intervention
+    and analysis. This prevents data loss and provides visibility into
+    failures requiring operational attention.
+    """
+    __tablename__ = "outbox_dead_letters"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+
+    # Original event information
+    original_event_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
+    event_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    aggregate_type: Mapped[str] = mapped_column(String(32), nullable=False)
+    aggregate_id: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    # Business context
+    reservation_code: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
+
+    # Event data
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+
+    # Failure context
+    error_code: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    error_message: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    attempts: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    # Audit
+    moved_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
