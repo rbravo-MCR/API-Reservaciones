@@ -17,7 +17,7 @@ from app.infrastructure.db.repositories.payment_repo_sql import PaymentRepoSQL
 from app.infrastructure.db.repositories.reservation_repo_sql import ReservationRepoSQL
 from app.infrastructure.db.repositories.supplier_request_repo_sql import SupplierRequestRepoSQL
 from app.infrastructure.db.transaction_manager import SQLAlchemyTransactionManager
-from app.infrastructure.gateways.america_group_gateway import AmericaGroupGateway
+from app.infrastructure.gateways.factory import SupplierGatewayFactory
 from app.infrastructure.gateways.stripe_gateway_real import StripeGatewayReal
 from app.infrastructure.gateways.supplier_gateway_http import SupplierGatewayHTTP
 from app.infrastructure.gateways.supplier_gateway_selector import SupplierGatewaySelector
@@ -130,7 +130,35 @@ def get_use_cases(
     tx_manager = SQLAlchemyTransactionManager(session)
     receipt_query = ReceiptQuerySQL(session)
     default_supplier_gateway = StubSupplierGateway()
-    selector = SupplierGatewaySelector(default_gateway=default_supplier_gateway)
+    
+    # Configuración preliminar para la Factory (se debe expandir Settings en el futuro)
+    factory_config = {
+        "avis": {"endpoint": settings.supplier_base_url},
+        "europcargroup": {"endpoint": settings.supplier_base_url},
+        "americagroup": {
+            "endpoint": settings.americagroup_endpoint,
+            "requestor_id": settings.americagroup_requestor_id,
+            "timeout_seconds": settings.americagroup_timeout_seconds,
+            "retry_times": settings.americagroup_retry_times,
+            "retry_sleep_ms": settings.americagroup_retry_sleep_ms,
+        },
+        # Placeholders para nuevos proveedores (requieren variables de entorno reales)
+        "hertzargentina": {"base_url": "https://hertz.test"},
+        "infinity": {"endpoint": "https://infinity.test"},
+        "localiza": {"endpoint": "https://localiza.test"},
+        "mexgroup": {"endpoint": "https://mex.test"},
+        "nationalgroup": {"endpoint": "https://national.test"},
+        "nizacars": {"base_url": "https://niza.test"},
+        "noleggiare": {"endpoint": "https://noleggiare.test"},
+    }
+    
+    gateway_factory = SupplierGatewayFactory(config=factory_config)
+    
+    selector = SupplierGatewaySelector(
+        default_gateway=default_supplier_gateway,
+        factory=gateway_factory
+    )
+    
     if settings.supplier_base_url:
         selector.register(
             supplier_id=0,  # fallback mapping; real mappings deberían ser específicos

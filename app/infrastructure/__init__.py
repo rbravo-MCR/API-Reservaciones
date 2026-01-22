@@ -28,7 +28,7 @@ from app.infrastructure.gateways.factory import SupplierGatewayFactory
 from app.infrastructure.gateways.stripe_gateway_real import StripeGatewayReal
 
 # In-Memory (for testing)
-from app.infrastructure.in_memory import (
+from app.infrastructure.gateways.in_memory import (
     InMemoryContactRepo,
     InMemoryDriverRepo,
     InMemoryIdempotencyRepo,

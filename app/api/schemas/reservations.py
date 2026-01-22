@@ -56,6 +56,7 @@ class CreateReservationRequest(BaseModel):
     acriss_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=10)] | None = None
     pickup_datetime: datetime
     dropoff_datetime: datetime
+    rental_days: int
     currency_code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=3)]
     public_price_total: Money
     supplier_cost_total: Money

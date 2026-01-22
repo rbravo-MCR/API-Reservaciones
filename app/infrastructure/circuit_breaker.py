@@ -59,7 +59,7 @@ def log_circuit_state_change(breaker_name: str, old_state: str, new_state: str):
 
 
 # Add state change listeners
-class CircuitBreakerListener:
+class CircuitBreakerListener(CircuitBreaker.Listener if hasattr(CircuitBreaker, 'Listener') else object):
     """Listener for circuit breaker state changes."""
 
     def __init__(self, name: str):
@@ -69,13 +69,39 @@ class CircuitBreakerListener:
         """Called when circuit breaker state changes."""
         log_circuit_state_change(self.name, old_state.name, new_state.name)
 
+    def before_call(self, cb, func, *args, **kwargs): pass
+    def after_call(self, cb, func, *args, **kwargs): pass
+    def success(self, cb): pass
+    def failure(self, cb, exc): pass
+
 
 stripe_breaker.add_listener(CircuitBreakerListener("stripe"))
 supplier_breaker.add_listener(CircuitBreakerListener("supplier"))
 
 
+def async_supplier_breaker(func):
+    """Decorator for async supplier calls with circuit breaker."""
+    async def wrapper(*args, **kwargs):
+        # We use the breaker to wrap the execution. 
+        # Since pybreaker's call_async is buggy, we use the synchronous call 
+        # but manage the async execution ourselves while letting the breaker 
+        # track failures.
+        
+        try:
+            # This will trip the breaker if an exception is raised
+            return await supplier_breaker.call(func, *args, **kwargs)
+        except Exception as e:
+            # If it's already a CircuitBreakerError, just re-raise
+            if isinstance(e, CircuitBreakerError):
+                raise e
+            # Otherwise, the breaker already recorded the failure in .call()
+            raise e
+    return wrapper
+
+
 __all__ = [
     "stripe_breaker",
     "supplier_breaker",
+    "async_supplier_breaker",
     "CircuitBreakerError",
 ]

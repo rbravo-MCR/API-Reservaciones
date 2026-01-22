@@ -1,0 +1,50 @@
+{
+  "supplier_id": 28,
+  "country_code": "MX",
+  "pickup_office_id": 1,
+  "dropoff_office_id": 1,
+  "pickup_office_code": "MEX",
+  "dropoff_office_code": "MEX",
+  "car_category_id": 1,
+  "acriss_code": "ECAR",
+  "pickup_datetime": "2026-03-01T10:00:00",
+  "dropoff_datetime": "2026-03-05T10:00:00",
+  "rental_days": 4,
+  "currency_code": "MXN",
+  "public_price_total": 4500.50,
+  "supplier_cost_total": 3200.00,
+  "taxes_total": 720.00,
+  "fees_total": 150.00,
+  "discount_total": 0.00,
+  "commission_total": 450.00,
+  "cashback_earned_amount": 0.00,
+  "booking_device": "DESKTOP",
+  "sales_channel_id": 1,
+  "customer_ip": "127.0.0.1",
+  "customer_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "contacts": [
+    {
+      "contact_type": "BOOKER",
+      "full_name": "Juan Perez",
+      "email": "juan.perez@example.com",
+      "phone": "+525512345678"
+    }
+  ],
+  "drivers": [
+    {
+      "is_primary_driver": true,
+      "first_name": "Juan",
+      "last_name": "Perez",
+      "email": "juan.perez@example.com",
+      "phone": "+525512345678",
+      "date_of_birth": "1990-01-01",
+      "driver_license_number": "ABC123456"
+    }
+  ],
+  "supplier_specific_data": {
+    "rate_code": "IPAMOM",
+    "class_code": "ECAR",
+    "rate_id": "MEX-R-998877",
+    "corporate_setup": "00108"
+  }
+}

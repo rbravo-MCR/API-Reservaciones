@@ -80,6 +80,22 @@
 
 ---
 
+## 🚀 Prueba de Estrés (Load Testing)
+
+**Fecha**: 2026-01-22
+**Herramienta**: Locust
+
+✅ **Creación de Reservaciones (Intent)**:
+- **Usuarios**: 10 concurrentes
+- **Total Request**: 91
+- **Fallas**: 0 (0%) ✅
+- **Promedio**: 978ms
+- **P90**: 2500ms
+
+*Ver informe detallado en [STRESS_TEST.md](./STRESS_TEST.md)*
+
+---
+
 ## ❌ Tests que Fallan (9)
 
 ### PROB-001: Rollback Fix (0/4 tests - 0%)
@@ -239,7 +255,8 @@ pytest tests/integration/ -k "not PROB001 and not dlq_table_structure" -v
 
 1. ✅ **Completado**: Tests de PROB-007 (Deadlock Retry) - 92.9% éxito
 2. ✅ **Completado**: Tests de PROB-003 (DLQ) - 88.9% éxito
-3. ⏳ **Pendiente**: Configurar TestClient para PROB-001
+3. ✅ **Completado**: Informe de Prueba de Estrés (STRESS_TEST.md) - 100% éxito
+4. ⏳ **Pendiente**: Configurar TestClient para PROB-001
 4. ⏳ **Pendiente**: Ajustar formato de health checks PROB-006
 5. ⏳ **Pendiente**: Ejecutar con MySQL real para tests marcados como @pytest.mark.mysql
 
