@@ -44,9 +44,18 @@ class StripeGatewayReal(StripeGateway):
                 currency=currency.lower(),
                 payment_method=payment_method_id,
                 confirm=True,
-                automatic_payment_methods={"enabled": True},
+                automatic_payment_methods={
+                    "enabled": True,
+                    "allow_redirects": "never"
+                },
             )
-            charge_id = intent.charges.data[0].id if intent.charges.data else intent.latest_charge
+            # Safe access to charge_id
+            charge_id = None
+            if hasattr(intent, "latest_charge") and intent.latest_charge:
+                charge_id = intent.latest_charge
+            elif hasattr(intent, "charges") and intent.charges.data:
+                charge_id = intent.charges.data[0].id
+
             return StripePaymentResult(
                 status=intent.status,
                 payment_intent_id=intent.id,

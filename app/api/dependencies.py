@@ -17,19 +17,20 @@ from app.infrastructure.db.repositories.payment_repo_sql import PaymentRepoSQL
 from app.infrastructure.db.repositories.reservation_repo_sql import ReservationRepoSQL
 from app.infrastructure.db.repositories.supplier_request_repo_sql import SupplierRequestRepoSQL
 from app.infrastructure.db.transaction_manager import SQLAlchemyTransactionManager
+from app.infrastructure.gateways.america_group_gateway import AmericaGroupGateway
 from app.infrastructure.gateways.factory import SupplierGatewayFactory
 from app.infrastructure.gateways.stripe_gateway_real import StripeGatewayReal
 from app.infrastructure.gateways.supplier_gateway_http import SupplierGatewayHTTP
 from app.infrastructure.gateways.supplier_gateway_selector import SupplierGatewaySelector
-from app.infrastructure.in_memory.idempotency_repo import InMemoryIdempotencyRepo
-from app.infrastructure.in_memory.outbox_repo import InMemoryOutboxRepo
-from app.infrastructure.in_memory.payment_repo import InMemoryPaymentRepo
-from app.infrastructure.in_memory.receipt_query import InMemoryReceiptQuery
-from app.infrastructure.in_memory.reservation_repo import InMemoryReservationRepo
-from app.infrastructure.in_memory.stripe_gateway import StubStripeGateway
-from app.infrastructure.in_memory.supplier_gateway import StubSupplierGateway
-from app.infrastructure.in_memory.supplier_request_repo import InMemorySupplierRequestRepo
-from app.infrastructure.in_memory.transaction_manager import NoopTransactionManager
+from app.infrastructure.gateways.in_memory.idempotency_repo import InMemoryIdempotencyRepo
+from app.infrastructure.gateways.in_memory.outbox_repo import InMemoryOutboxRepo
+from app.infrastructure.gateways.in_memory.payment_repo import InMemoryPaymentRepo
+from app.infrastructure.gateways.in_memory.receipt_query import InMemoryReceiptQuery
+from app.infrastructure.gateways.in_memory.reservation_repo import InMemoryReservationRepo
+from app.infrastructure.gateways.in_memory.stripe_gateway import StubStripeGateway
+from app.infrastructure.gateways.in_memory.supplier_gateway import StubSupplierGateway
+from app.infrastructure.gateways.in_memory.supplier_request_repo import InMemorySupplierRequestRepo
+from app.infrastructure.gateways.in_memory.transaction_manager import NoopTransactionManager
 
 
 async def get_session(settings: Settings = Depends(get_settings)) -> AsyncSession | None:

@@ -5,7 +5,8 @@ from typing import Any, Dict, Optional
 from xml.sax.saxutils import escape
 
 import httpx
-from app.application.interfaces.supplier_gateway import SupplierGateway, SupplierBookingResult
+
+from app.application.interfaces.supplier_gateway import SupplierBookingResult, SupplierGateway
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +107,7 @@ class CentauroAdapter(SupplierGateway):
         try:
             dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
             return dt.strftime("%d/%m/%Y %H:%M:%S")
-        except:
+        except Exception:
             return dt_str
 
     def _parse_response(self, response_xml: str) -> SupplierBookingResult:

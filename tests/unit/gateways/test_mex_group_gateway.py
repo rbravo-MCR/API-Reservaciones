@@ -1,6 +1,8 @@
 import unittest
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
+
 from app.infrastructure.gateways.mex_group_gateway import MexGroupGateway
+
 
 class TestMexGroupGateway(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

@@ -1,6 +1,9 @@
 import unittest
-from unittest.mock import AsyncMock, patch, MagicMock
+import urllib.parse
+from unittest.mock import AsyncMock, MagicMock, patch
+
 from app.infrastructure.gateways.infinity_group_gateway import InfinityGroupGateway
+
 
 class TestInfinityGroupGateway(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
@@ -98,5 +101,3 @@ class TestInfinityGroupGateway(unittest.IsolatedAsyncioTestCase):
         
         self.assertEqual(result.status, "FAILED")
         self.assertEqual(result.error_code, "MISSING_SUPPLIER_DATA")
-
-import urllib.parse

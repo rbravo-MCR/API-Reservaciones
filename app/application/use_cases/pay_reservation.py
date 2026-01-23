@@ -109,6 +109,12 @@ class PayReservationUseCase:
                 payment_status=PAYMENT_STATUS_PAID,
                 expected_lock_version=expected_lock_version,
             )
+            # Update reservation status to ON_REQUEST as well
+            await self._reservation_repo.update_status(
+                reservation_code=reservation_code,
+                status=RESERVATION_STATUS_ON_REQUEST,
+                expected_lock_version=expected_lock_version + 1,
+            )
             await self._outbox_repo.enqueue(
                 event_type="BOOK_SUPPLIER",
                 aggregate_type="reservation",

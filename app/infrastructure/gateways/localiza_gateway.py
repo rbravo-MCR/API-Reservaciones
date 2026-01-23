@@ -4,8 +4,8 @@ from typing import Any, Dict
 
 import httpx
 
-from app.infrastructure.circuit_breaker import async_supplier_breaker
 from app.application.interfaces.supplier_gateway import SupplierBookingResult, SupplierGateway
+from app.infrastructure.circuit_breaker import async_supplier_breaker
 
 
 class LocalizaGateway(SupplierGateway):
@@ -161,12 +161,6 @@ class LocalizaGateway(SupplierGateway):
             # O usar lógica robusta con namespaces
             content = response.text
             root = ET.fromstring(content)
-            
-            # Namespaces map
-            ns = {
-                'soap': 'http://schemas.xmlsoap.org/soap/envelope/',
-                'ota': 'http://www.opentravel.org/OTA/2003/05'
-            }
             
             # Buscar Body -> OTA_VehResRS
             # Debido a variaciones de prefijos, buscamos OTA_VehResRS donde sea

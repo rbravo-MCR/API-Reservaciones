@@ -90,6 +90,14 @@ class ReservationRepo:
     ) -> None:
         raise NotImplementedError
 
+    async def update_status(
+        self,
+        reservation_code: str,
+        status: str,
+        expected_lock_version: int | None = None,
+    ) -> None:
+        raise NotImplementedError
+
     async def mark_confirmed(
         self,
         reservation_code: str,

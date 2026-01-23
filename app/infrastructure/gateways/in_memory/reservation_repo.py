@@ -47,6 +47,22 @@ class InMemoryReservationRepo(ReservationRepo):
         self.reservations[reservation_code].lock_version += 1
         self.reservations[reservation_code].payment_status = payment_status
 
+    async def update_status(
+        self,
+        reservation_code: str,
+        status: str,
+        expected_lock_version: int | None = None,
+    ) -> None:
+        if reservation_code not in self.reservations:
+            raise ValueError("Reservation not found")
+        if (
+            expected_lock_version is not None
+            and self.reservations[reservation_code].lock_version != expected_lock_version
+        ):
+            raise ValueError("lock_version mismatch")
+        self.reservations[reservation_code].lock_version += 1
+        self.reservations[reservation_code].status = status
+
     async def mark_confirmed(
         self,
         reservation_code: str,

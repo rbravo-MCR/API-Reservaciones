@@ -1,7 +1,9 @@
 
 import json
 import uuid
-from locust import HttpUser, task, between
+
+from locust import HttpUser, between, task
+
 
 class APIUser(HttpUser):
     # Wait between 1 and 3 seconds between tasks

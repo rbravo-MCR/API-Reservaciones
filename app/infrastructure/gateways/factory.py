@@ -7,10 +7,10 @@ from app.infrastructure.gateways.hertz_argentina_gateway import HertzArgentinaGa
 from app.infrastructure.gateways.infinity_group_gateway import InfinityGroupGateway
 from app.infrastructure.gateways.localiza_gateway import LocalizaGateway
 from app.infrastructure.gateways.mex_group_gateway import MexGroupGateway
+from app.infrastructure.gateways.mock_supplier import MockSupplierAdapter
 from app.infrastructure.gateways.national_group_gateway import NationalGroupGateway
 from app.infrastructure.gateways.niza_cars_gateway import NizaCarsGateway
 from app.infrastructure.gateways.noleggiare_gateway import NoleggiareGateway
-from app.infrastructure.gateways.mock_supplier import MockSupplierAdapter
 
 
 class SupplierGatewayFactory:

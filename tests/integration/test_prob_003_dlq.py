@@ -8,9 +8,10 @@ Verifica que el Dead Letter Queue funciona correctamente:
 - Tabla outbox_dead_letters existe y tiene estructura correcta
 """
 
-import pytest
 from datetime import datetime, timezone
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import AsyncMock, patch
+
+import pytest
 
 
 @pytest.mark.asyncio
@@ -63,8 +64,9 @@ class TestPROB003DLQBasic:
         """
         PROB-003: Verificar que OutboxRepo tiene método move_to_dlq.
         """
-        from app.application.interfaces.outbox_repo import OutboxRepo
         import inspect
+
+        from app.application.interfaces.outbox_repo import OutboxRepo
 
         # Verificar que el método existe
         assert hasattr(OutboxRepo, 'move_to_dlq'), \
@@ -143,9 +145,10 @@ class TestPROB003DLQIntegration:
         PROB-003: Verificar que DLQ preserva todos los datos del evento original.
         """
         from sqlalchemy import insert, select, text
-        from app.infrastructure.db.tables import outbox_events, outbox_dead_letters
-        from app.infrastructure.db.repositories.outbox_repo_sql import OutboxRepoSQL
+
         from app.application.interfaces.outbox_repo import OutboxEvent
+        from app.infrastructure.db.repositories.outbox_repo_sql import OutboxRepoSQL
+        from app.infrastructure.db.tables import outbox_dead_letters, outbox_events
 
         # Crear evento de prueba
         now = datetime.now(timezone.utc)
@@ -223,10 +226,8 @@ class TestPROB003DLQIntegration:
         PROB-003: Verificar que move_to_dlq hace logging apropiado.
         """
         with patch('app.infrastructure.db.repositories.outbox_repo_sql.logger') as mock_logger:
-            from sqlalchemy import insert
-            from app.infrastructure.db.tables import outbox_events
-            from app.infrastructure.db.repositories.outbox_repo_sql import OutboxRepoSQL
             from app.application.interfaces.outbox_repo import OutboxEvent
+            from app.infrastructure.db.repositories.outbox_repo_sql import OutboxRepoSQL
 
             # Mock session
             mock_session = AsyncMock()
@@ -274,6 +275,7 @@ class TestPROB003DLQQueries:
         PROB-003: Query para contar eventos en DLQ.
         """
         from sqlalchemy import func, select
+
         from app.infrastructure.db.tables import outbox_dead_letters
 
         # Query simple de count
@@ -289,6 +291,7 @@ class TestPROB003DLQQueries:
         PROB-003: Query para agrupar DLQ por error_code.
         """
         from sqlalchemy import func, select
+
         from app.infrastructure.db.tables import outbox_dead_letters
 
         # Query de agrupación

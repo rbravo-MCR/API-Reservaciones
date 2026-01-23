@@ -49,7 +49,7 @@ def log_circuit_state_change(breaker_name: str, old_state: str, new_state: str):
     In production, this should trigger alerts when circuits open.
     """
     logger.warning(
-        f"Circuit breaker state changed",
+        "Circuit breaker state changed",
         extra={
             "breaker_name": breaker_name,
             "old_state": old_state,

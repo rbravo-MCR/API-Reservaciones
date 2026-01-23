@@ -1,6 +1,8 @@
 import unittest
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
+
 from app.infrastructure.gateways.national_group_gateway import NationalGroupGateway
+
 
 class TestNationalGroupGateway(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

@@ -1,6 +1,8 @@
 import unittest
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
+
 from app.infrastructure.gateways.noleggiare_gateway import NoleggiareGateway
+
 
 class TestNoleggiareGateway(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

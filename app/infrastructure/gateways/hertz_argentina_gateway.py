@@ -4,8 +4,8 @@ from typing import Any, Dict
 
 import httpx
 
-from app.infrastructure.circuit_breaker import async_supplier_breaker
 from app.application.interfaces.supplier_gateway import SupplierBookingResult, SupplierGateway
+from app.infrastructure.circuit_breaker import async_supplier_breaker
 
 
 class HertzArgentinaGateway(SupplierGateway):
@@ -101,8 +101,8 @@ class HertzArgentinaGateway(SupplierGateway):
         # En PHP legacy $params recibía todo plano. Aquí intentamos extraer de estructura lógica
         # o usamos claves planas si vienen así en el snapshot legacy.
         
-        first_name = customer_data.get("first_name") or reservation_snapshot.get("name") or "Driver"
-        last_name = customer_data.get("last_name") or reservation_snapshot.get("lastname") or "Name"
+        first_name = customer_data.get("first_name") or driver_data.get("first_name") or reservation_snapshot.get("name") or "Driver"
+        last_name = customer_data.get("last_name") or driver_data.get("last_name") or reservation_snapshot.get("lastname") or "Name"
         full_driver_name = f"{first_name} {last_name}"
         email = customer_data.get("email") or reservation_snapshot.get("driver_email") or "reservaciones@mexicocarrental.com.mx"
         

@@ -3,7 +3,8 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 import httpx
-from app.application.interfaces.supplier_gateway import SupplierGateway, SupplierBookingResult
+
+from app.application.interfaces.supplier_gateway import SupplierBookingResult, SupplierGateway
 
 logger = logging.getLogger(__name__)
 

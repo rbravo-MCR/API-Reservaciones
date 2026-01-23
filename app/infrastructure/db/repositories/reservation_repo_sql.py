@@ -170,6 +170,25 @@ class ReservationRepoSQL(ReservationRepo):
         )
         await self._session.execute(stmt)
 
+    async def update_status(
+        self,
+        reservation_code: str,
+        status: str,
+        expected_lock_version: int | None = None,
+    ) -> None:
+        where_clause = [reservations.c.reservation_code == reservation_code]
+        if expected_lock_version is not None:
+            where_clause.append(reservations.c.lock_version == expected_lock_version)
+        stmt = (
+            update(reservations)
+            .where(*where_clause)
+            .values(
+                status=status,
+                lock_version=reservations.c.lock_version + 1,
+            )
+        )
+        await self._session.execute(stmt)
+
     async def mark_confirmed(
         self,
         reservation_code: str,

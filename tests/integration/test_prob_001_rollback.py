@@ -154,7 +154,6 @@ class TestPROB001Integration:
 
         Este test lee el código fuente para asegurar que el fix está aplicado.
         """
-        import os
         from pathlib import Path
 
         repo_file = Path("app/infrastructure/db/repository.py")

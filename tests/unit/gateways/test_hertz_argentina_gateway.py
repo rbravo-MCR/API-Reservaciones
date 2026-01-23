@@ -1,6 +1,8 @@
 import unittest
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
+
 from app.infrastructure.gateways.hertz_argentina_gateway import HertzArgentinaGateway
+
 
 class TestHertzArgentinaGateway(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

@@ -3,8 +3,8 @@ from typing import Any, Dict
 
 import httpx
 
-from app.infrastructure.circuit_breaker import async_supplier_breaker
 from app.application.interfaces.supplier_gateway import SupplierBookingResult, SupplierGateway
+from app.infrastructure.circuit_breaker import async_supplier_breaker
 
 
 class MexGroupGateway(SupplierGateway):

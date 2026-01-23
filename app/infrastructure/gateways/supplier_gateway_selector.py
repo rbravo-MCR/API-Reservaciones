@@ -1,6 +1,7 @@
 from typing import Dict, Tuple
 
 from app.application.interfaces.supplier_gateway import SupplierGateway
+
 # Importamos la Factory solo para typing si es necesario, o usamos Any para evitar ciclos circulares si están en mismo paquete
 # from app.infrastructure.gateways.factory import SupplierGatewayFactory 
 

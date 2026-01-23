@@ -9,7 +9,13 @@ Este módulo provee fixtures reutilizables para:
 """
 
 import asyncio
+
+# Import metadata directly from tables module
+import importlib.util
 import os
+
+# Direct imports to avoid problematic __init__.py files
+import sys
 from typing import AsyncGenerator, Generator
 
 import pytest
@@ -19,12 +25,6 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-# Direct imports to avoid problematic __init__.py files
-import sys
-from sqlalchemy import MetaData
-
-# Import metadata directly from tables module
-import importlib.util
 spec = importlib.util.spec_from_file_location(
     "tables",
     "C:/proyectos/Python/API-Reservaciones/app/infrastructure/db/tables.py"
@@ -35,8 +35,8 @@ metadata = tables_module.metadata
 
 # Try to import app
 try:
-    from app.main import app
     from app.api.deps import get_db_session
+    from app.main import app
 except ImportError as e:
     print(f"Warning: Could not import app components: {e}", file=sys.stderr)
     app = None

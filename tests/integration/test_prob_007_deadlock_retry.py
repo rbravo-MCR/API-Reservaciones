@@ -8,11 +8,10 @@ Verifica que el retry automático de deadlocks funciona correctamente:
 - Se rinde después del max_attempts
 """
 
-import asyncio
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
-from sqlalchemy.exc import DBAPIError, OperationalError
+from sqlalchemy.exc import OperationalError
 
 from app.infrastructure.db.retry import (
     is_deadlock_error,
@@ -313,8 +312,6 @@ class TestPROB007RealScenarios:
         """
         PROB-007: Verificar que se hace logging en cada retry.
         """
-        import logging
-        from unittest.mock import MagicMock
 
         # Mock del logger
         with patch('app.infrastructure.db.retry.logger') as mock_logger:

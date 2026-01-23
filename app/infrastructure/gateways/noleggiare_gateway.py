@@ -1,12 +1,12 @@
 import logging
-import xml.etree.ElementTree as ET
 import uuid
+import xml.etree.ElementTree as ET
 from typing import Any, Dict
 
 import httpx
 
-from app.infrastructure.circuit_breaker import async_supplier_breaker
 from app.application.interfaces.supplier_gateway import SupplierBookingResult, SupplierGateway
+from app.infrastructure.circuit_breaker import async_supplier_breaker
 
 
 class NoleggiareGateway(SupplierGateway):
@@ -109,10 +109,6 @@ class NoleggiareGateway(SupplierGateway):
         if flight_no:
             arrival_details = f'<ns:ArrivalDetails Number="{flight_no}" ArrivalDateTime="{pu_date}"/>'
             
-        payment_info = ""
-        # Legacy sends payment info only if amount is present, hardcoded to bonifico charge
-        # We omit amount logic for now unless critical, or send generic payment pref
-        
         xml_body = f"""<ns:OTA_VehResRQ Version="{self._version}" Target="{self._target}" TimeStamp="{pu_date}" EchoToken="{echo_token}" xmlns:ns="{ns_ota}">
             {pos}
             <ns:VehResRQCore>

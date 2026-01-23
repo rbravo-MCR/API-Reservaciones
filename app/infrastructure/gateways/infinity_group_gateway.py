@@ -5,8 +5,8 @@ from typing import Any, Dict
 
 import httpx
 
-from app.infrastructure.circuit_breaker import async_supplier_breaker
 from app.application.interfaces.supplier_gateway import SupplierBookingResult, SupplierGateway
+from app.infrastructure.circuit_breaker import async_supplier_breaker
 
 
 class InfinityGroupGateway(SupplierGateway):
@@ -199,7 +199,6 @@ class InfinityGroupGateway(SupplierGateway):
             # Haremos una busqueda agnostica o directa.
             
             # Intentar buscar namespace si existe
-            ns = {}
             if 'xmlns' in content:
                  # simple hack, if needed. For now assume no NS or ignore it via find
                  pass
