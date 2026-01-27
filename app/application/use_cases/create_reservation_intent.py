@@ -4,8 +4,14 @@ from typing import Any, Callable
 
 from fastapi import HTTPException, status
 
-from app.api.schemas.reservations import CreateReservationRequest, CreateReservationResponse
-from app.application.interfaces.idempotency_repo import IdempotencyRecord, IdempotencyRepo
+from app.api.schemas.reservations import (
+    CreateReservationRequest,
+    CreateReservationResponse,
+)
+from app.application.interfaces.idempotency_repo import (
+    IdempotencyRecord,
+    IdempotencyRepo,
+)
 from app.application.interfaces.reservation_repo import (
     ContactInput,
     DriverInput,
@@ -13,11 +19,16 @@ from app.application.interfaces.reservation_repo import (
     ReservationRepo,
 )
 from app.application.interfaces.transaction_manager import TransactionManager
-from app.domain.constants import PAYMENT_STATUS_UNPAID, RESERVATION_STATUS_PENDING
+from app.domain.constants import (
+    PAYMENT_STATUS_UNPAID,
+    RESERVATION_STATUS_PENDING,
+)
 
 
 def _hash_request(payload: dict[str, Any]) -> str:
-    normalized = json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
+    normalized = json.dumps(
+        payload, sort_keys=True, default=str, separators=(",", ":")
+    )
     return hashlib.sha256(normalized.encode()).hexdigest()
 
 
@@ -43,14 +54,21 @@ class CreateReservationIntentUseCase:
         request_hash = _hash_request(request.model_dump())
 
         async with self._transaction_manager.start():
-            existing = await self._idempotency_repo.get(scope=scope, idem_key=idem_key)
+            existing = await self._idempotency_repo.get(
+                scope=scope, idem_key=idem_key
+            )
             if existing:
                 if existing.request_hash != request_hash:
                     raise HTTPException(
                         status_code=status.HTTP_409_CONFLICT,
-                        detail="Idempotency conflict: different payload for same key",
+                        detail=(
+                            "Idempotency conflict: different payload "
+                            "for same key"
+                        ),
                     )
-                return CreateReservationResponse.model_validate(existing.response_json)
+                return CreateReservationResponse.model_validate(
+                    existing.response_json
+                )
 
             reservation_code = self._code_generator()
 
@@ -70,7 +88,11 @@ class CreateReservationIntentUseCase:
                     last_name=driver.last_name,
                     email=driver.email,
                     phone=driver.phone,
-                    date_of_birth=str(driver.date_of_birth) if driver.date_of_birth else None,
+                    date_of_birth=(
+                        str(driver.date_of_birth)
+                        if driver.date_of_birth
+                        else None
+                    ),
                     driver_license_number=driver.driver_license_number,
                 )
                 for driver in request.drivers

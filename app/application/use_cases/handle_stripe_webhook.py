@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from fastapi import HTTPException, status
 
@@ -29,7 +30,8 @@ class HandleStripeWebhookUseCase:
     async def execute(self, raw_body: bytes, signature: str | None) -> None:
         if not raw_body:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Empty webhook body"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Empty webhook body",
             )
         try:
             event_dict = await self._stripe_gateway.parse_webhook_event(
@@ -39,16 +41,24 @@ class HandleStripeWebhookUseCase:
             )
             event = StripeWebhookEnvelope.model_validate(event_dict)
         except ValueError as exc:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(exc),
+            ) from exc
 
         if not event.type or not event.data:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid event payload"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid event payload",
             )
 
         stripe_event_id = event.id
         intent_id = self._extract_intent_id(event)
-        payment = await self._payment_repo.find_by_payment_intent(intent_id) if intent_id else None
+        payment = (
+            await self._payment_repo.find_by_payment_intent(intent_id)
+            if intent_id
+            else None
+        )
 
         # Idempotent by stripe_event_id
         if stripe_event_id:
@@ -59,9 +69,16 @@ class HandleStripeWebhookUseCase:
                 return
 
         if not payment:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Payment not found")
-        reservation = await self._reservation_repo.get_by_code(payment.reservation_code)
-        expected_lock_version = reservation.lock_version if reservation else None
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Payment not found",
+            )
+        reservation = await self._reservation_repo.get_by_code(
+            payment.reservation_code
+        )
+        expected_lock_version = (
+            reservation.lock_version if reservation else None
+        )
 
         if event.type == "payment_intent.succeeded":
             await self._payment_repo.mark_captured(
@@ -108,16 +125,28 @@ class HandleStripeWebhookUseCase:
             )
         else:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Unhandled event type"
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="Unhandled event type"
             )
 
     def _extract_intent_id(self, event: StripeWebhookEnvelope) -> str | None:
-        data_obj = event.data.get("object", {}) if isinstance(event.data, dict) else {}
-        return data_obj.get("id") or data_obj.get("payment_intent")
+        data_obj: dict[str, Any] = event.data.get("object", {})
+        data_obj = dict(data_obj) if data_obj else {}
+        intent_id: str | None = (
+            data_obj.get("id") or data_obj.get("payment_intent")
+        )
+        return intent_id
 
     def _extract_charge_id(self, event: StripeWebhookEnvelope) -> str | None:
-        data_obj = event.data.get("object", {}) if isinstance(event.data, dict) else {}
-        if data_obj.get("charges") and data_obj["charges"].get("data"):
-            charge = data_obj["charges"]["data"][0]
-            return charge.get("id")
-        return data_obj.get("latest_charge")
+        data_obj: dict[str, Any] = event.data.get("object", {})
+        data_obj = dict(data_obj) if data_obj else {}
+        charges = data_obj.get("charges")
+        if isinstance(charges, dict):
+            charge_list: Any = charges.get("data")
+            if isinstance(charge_list, list) and charge_list:
+                charge = charge_list[0]
+                if isinstance(charge, dict):
+                    charge_id: str | None = charge.get("id")
+                    return charge_id
+        latest_charge: str | None = data_obj.get("latest_charge")
+        return latest_charge

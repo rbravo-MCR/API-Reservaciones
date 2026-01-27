@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from app.api.schemas.reservations import (
     Contact,
+    ContactType,
     Driver,
     OfficeSnapshot,
     PricingSnapshot,
@@ -19,9 +22,13 @@ class GetReceiptUseCase:
         data = await self._receipt_query.get_receipt(reservation_code)
         if not data:
             from fastapi import HTTPException, status
+
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Receipt for reservation {reservation_code} not found or not confirmed",
+                detail=(
+                    f"Receipt for reservation {reservation_code} "
+                    "not found or not confirmed"
+                ),
             )
 
         return ReceiptResponse(
@@ -47,7 +54,7 @@ class GetReceiptUseCase:
             ),
             contacts=[
                 Contact(
-                    contact_type=c.contact_type,
+                    contact_type=ContactType(c.contact_type),
                     full_name=c.full_name,
                     email=c.email,
                     phone=c.phone,
@@ -61,7 +68,11 @@ class GetReceiptUseCase:
                     last_name=d.last_name,
                     email=d.email,
                     phone=d.phone,
-                    date_of_birth=d.date_of_birth,
+                    date_of_birth=(
+                        datetime.strptime(d.date_of_birth, "%Y-%m-%d").date()
+                        if d.date_of_birth
+                        else None
+                    ),
                     driver_license_number=d.driver_license_number,
                 )
                 for d in data.drivers
